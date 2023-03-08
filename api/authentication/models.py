@@ -33,8 +33,6 @@ class Education (models.Model):
     description = models.CharField(max_length=500)
     id = models.AutoField
 
-
-
 class Skills(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
@@ -43,6 +41,7 @@ class JobTitle(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
 class RegisterFreelancer(models.Model):
+    id = models.AutoField
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email=models.CharField(max_length=100)
