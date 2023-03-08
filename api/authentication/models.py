@@ -70,6 +70,3 @@ class RegisterFreelancer(models.Model):
     services=models.ManyToManyField(Services)
 
 
-
-
-
