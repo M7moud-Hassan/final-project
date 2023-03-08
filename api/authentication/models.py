@@ -31,6 +31,7 @@ class Education (models.Model):
     from_year = models.IntegerField(4)
     to_year = models.IntegerField(4)
     description = models.CharField(max_length=500)
+
     id = models.AutoField
 
 
