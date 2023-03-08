@@ -13,5 +13,5 @@
 13-cd api
 14-create database call "api" in sql shell
 15- in terminal type python manage.py migrate  
-16-python manage.py runserver 
+16-python manage.py runserver
 17- tell me if all "done" pleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeease
