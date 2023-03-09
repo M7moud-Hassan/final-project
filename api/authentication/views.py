@@ -57,12 +57,12 @@ def emailResetPassword(request):
 
     token = account_activation_token._make_hash_value(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    reset_url = f'http://example.com/reset-password/{uid}/{token}/'
+    reset_url = f'localhost://reset_password/<uidb64>/<token>//{uid}/{token}/'
 
     send_mail(
         'Password Reset',
         f'Click the following link to reset your password: {reset_url}',
-        'noreply@example.com',
+        'soonfu0@gmail.com',
         [email],
         fail_silently=False,
     )
