@@ -48,6 +48,11 @@ class RegisterFreelancer(models.Model):
     password=models.CharField(max_length=300)
     job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE)
     overview=models.CharField(max_length=500)
+
+
+
+    hourly_rate=models.DecimalField(decimal_places=2,max_length=10)
+
     hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
     user_image=models.ImageField(upload_to='static_dirs/images/user_image')
     street_address=models.CharField(max_length=50)
