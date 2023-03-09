@@ -1,7 +1,7 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -40,5 +40,16 @@ def signup_freeLancer(request):
         from_email = settings.EMAIL_HOST_USER
         send_mail(mail_subject, 'message', from_email, to_email)
         return Response(user.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def verfy_email(request,token,uid):
+    uid = force_str(uid)
+    user = RegisterFreelancer.objects.filter(id=uid)
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_activate=True
+        return Response(user)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
