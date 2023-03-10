@@ -52,6 +52,8 @@ def verfy_email(request):
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 @api_view(['POST'])
 def emailResetPassword(request):
     email = request.data.get('email')
