@@ -29,7 +29,6 @@ class Education (models.Model):
     from_year = models.IntegerField(4)
     to_year = models.IntegerField(4)
     description = models.CharField(max_length=500)
-
     id = models.AutoField
 
 class Skills(models.Model):
@@ -40,21 +39,22 @@ class JobTitle(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
 class RegisterFreelancer(models.Model):
-
     id = models.AutoField
-
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email=models.CharField(max_length=100)
     is_active=models.BooleanField(default=False)
     phone_number=models.CharField(max_length=11)
     password=models.CharField(max_length=300)
-    job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE)
-    overview=models.CharField(max_length=500)
+    job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE,null=True)
+    overview=models.CharField(max_length=500,null=True)
 
-    hourly_rate=models.DecimalField(decimal_places=2,max_length=10)
+
+
+    hourly_rate=models.DecimalField(decimal_places=2,max_length=10,null=True)
 
     hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
+<<<<<<< HEAD
 
     user_image=models.ImageField(upload_to='static_dirs/images/user_image')
     street_address=models.CharField(max_length=50)
@@ -73,3 +73,14 @@ class RegisterUser(models.Model):
     password=models.CharField(max_length=100)
     is_active=models.BooleanField
     image=models.ImageField(upload_to='static_dirs/images/user_image')
+=======
+    user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True)
+    street_address=models.CharField(max_length=50,null=True)
+    city=models.CharField(max_length=50,null=True)
+    state=models.CharField(max_length=50,null=True)
+    postal_code=models.CharField(max_length=20,null=True)
+    experience=models.ManyToManyField(Experience,null=True)
+    education=models.ManyToManyField(Education,null=True)
+    skills=models.ManyToManyField(Skills,null=True)
+    services=models.ManyToManyField(Services,null=True)
+>>>>>>> 75095bc431a238c6b7acf0325488c94b32ff08ba
