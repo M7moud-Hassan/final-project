@@ -29,7 +29,6 @@ class Education (models.Model):
     from_year = models.IntegerField(4)
     to_year = models.IntegerField(4)
     description = models.CharField(max_length=500)
-
     id = models.AutoField
 
 class Skills(models.Model):
@@ -40,9 +39,7 @@ class JobTitle(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
 class RegisterFreelancer(models.Model):
-
     id = models.AutoField
-
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email=models.CharField(max_length=100)
@@ -52,10 +49,11 @@ class RegisterFreelancer(models.Model):
     job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE)
     overview=models.CharField(max_length=500)
 
+
+
     hourly_rate=models.DecimalField(decimal_places=2,max_length=10)
 
     hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
-
     user_image=models.ImageField(upload_to='static_dirs/images/user_image')
     street_address=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
