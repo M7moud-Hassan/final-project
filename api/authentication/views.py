@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from pyexpat.errors import messages
 from .helpers import send_forget_password_mail
-from api.authentication.models import RegisterFreelancer
-
+from api.authentication.models import RegisterFreelancer, RegisterUser
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
@@ -20,7 +20,7 @@ from django.contrib.auth.hashers import make_password ,check_password
 from django.core.mail import EmailMessage
 
 from .models import RegisterFreelancer
-from .serlializers import SignUpFreelancerSerializer
+from .serlializers import SignUpFreelancerSerializer , SignUpUserSerialzer
 from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
@@ -52,4 +52,13 @@ def signup_freeLancer(request):
         return Response(user.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def registerUserSerialzer(request):
+    user = SignUpUserSerialzer(data=request.data)
+    if user.is_valid():
+        hashPassword = make_password(user.data['password'])
+        RegisterUser.objects.create(fname=user.data['fname'],lname=user.data['lname'],email=user.data['email'],
+        password=hashPassword,phone=user.data['phone'],is_active=False)
+
 

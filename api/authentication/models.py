@@ -65,3 +65,11 @@ class RegisterFreelancer(models.Model):
     education=models.ManyToManyField(Education)
     skills=models.ManyToManyField(Skills)
     services=models.ManyToManyField(Services)
+
+class RegisterUser(models.Model):
+    fname=models.CharField(max_length=50)
+    lname=models.CharField(max_length=50)
+    phone=models.CharField(max_length=11)
+    password=models.CharField(max_length=100)
+    is_active=models.BooleanField
+    image=models.ImageField(upload_to='static_dirs/images/user_image')
