@@ -9,5 +9,5 @@ class SignUpFreelancerSerializer(serializers.ModelSerializer):
 
 class SignUpUserSerialzer(serializers.ModelSerializer):
 	class Meta:
-		model = RegisterFreelancer
+		model = RegisterUser
 		fields = ('fname', 'lname','email','phone','password')

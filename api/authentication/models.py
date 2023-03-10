@@ -54,7 +54,7 @@ class RegisterFreelancer(models.Model):
     hourly_rate=models.DecimalField(decimal_places=2,max_length=10,null=True)
 
     hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
-<<<<<<< HEAD
+
 
     user_image=models.ImageField(upload_to='static_dirs/images/user_image')
     street_address=models.CharField(max_length=50)
@@ -70,10 +70,11 @@ class RegisterUser(models.Model):
     fname=models.CharField(max_length=50)
     lname=models.CharField(max_length=50)
     phone=models.CharField(max_length=11)
+    email=models.EmailField(max_length=70)
     password=models.CharField(max_length=100)
     is_active=models.BooleanField
     image=models.ImageField(upload_to='static_dirs/images/user_image')
-=======
+
     user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True)
     street_address=models.CharField(max_length=50,null=True)
     city=models.CharField(max_length=50,null=True)
@@ -83,4 +84,4 @@ class RegisterUser(models.Model):
     education=models.ManyToManyField(Education,null=True)
     skills=models.ManyToManyField(Skills,null=True)
     services=models.ManyToManyField(Services,null=True)
->>>>>>> 75095bc431a238c6b7acf0325488c94b32ff08ba
+

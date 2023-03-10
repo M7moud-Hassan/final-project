@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from pyexpat.errors import messages
 from .helpers import send_forget_password_mail
-from api.authentication.models import RegisterFreelancer, RegisterUser
+from .models import RegisterFreelancer, RegisterUser
 from django.contrib.auth.hashers import make_password
 
 # Create your views here.
@@ -58,9 +58,7 @@ def registerUserSerialzer(request):
     if user.is_valid():
         hashPassword = make_password(user.data['password'])
         RegisterUser.objects.create(fname=user.data['fname'],lname=user.data['lname'],email=user.data['email'],
-        password=hashPassword,phone=user.data['phone'],is_active=False)
-
-
+        password=hashPassword,phone=user.data['phone'])
 
 
 @api_view(['POST'])
