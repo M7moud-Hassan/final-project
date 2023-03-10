@@ -1,6 +1,9 @@
 from django.urls import path
+
+
 from .views import *
-urlpatterns=[
-    path('verfy_email/<uidb64:uid>/<str:token>',verfy_email,name='verfy_email'),
-    # path('Add',Add,name='Book_Add'),
+urlpatterns = [
+    path('signup_freelancer/',signup_freeLancer,name='signup_freelancer'),
+    path('activate/',verfy_email, name='activate'),
+
 ]
