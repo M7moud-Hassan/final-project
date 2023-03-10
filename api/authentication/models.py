@@ -72,7 +72,7 @@ class RegisterUser(models.Model):
     phone=models.CharField(max_length=11)
     email=models.EmailField(max_length=70)
     password=models.CharField(max_length=100)
-    is_active=models.BooleanField
+    is_active=models.BooleanField(default=False)
     image=models.ImageField(upload_to='static_dirs/images/user_image')
 
     user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True)
