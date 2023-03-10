@@ -27,7 +27,9 @@ def signup_freeLancer(request):
         register=RegisterFreelancer.objects.create(first_name=user.data['first_name'],
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
-                                          is_active=False)
+                                          is_active=False,job_title=None,overview=None,hourly_rate=None,
+                                                   user_image=None,street_address=None,city=None,
+                                                   state=None,postal_code=None)
 
 
         mail_subject = 'Activation link has been sent to your email id'
@@ -66,7 +68,7 @@ def emailResetPassword(request):
 
     token = account_activation_token._make_hash_value(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    reset_url = f'localhost://reset_password/<uidb64>/<token>//{uid}/{token}/'
+    reset_url = f'http://auth/rest_password/<uidb64>/<token>//{uid}/{token}/'
 
     send_mail(
         'Password Reset',
