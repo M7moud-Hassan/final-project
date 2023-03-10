@@ -36,14 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'authentication',
     'rest_framework',
-=======
     'rest_framework',
     'authentication',
 
->>>>>>> 75095bc431a238c6b7acf0325488c94b32ff08ba
 ]
 
 MIDDLEWARE = [
@@ -142,9 +139,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
-
-<<<<<<< HEAD
-=======
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
@@ -152,10 +146,11 @@ REST_FRAMEWORK = {
     ),
     'PAGE_SIZE': 10
 }
->>>>>>> 75095bc431a238c6b7acf0325488c94b32ff08ba
+
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'soonfu0@gmail.com'
 EMAIL_HOST_PASSWORD = 'ezjbcoviunkpwsdw'
 EMAIL_PORT = 587
+
