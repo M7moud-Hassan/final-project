@@ -29,30 +29,27 @@ def signup_freeLancer(request):
                                          password=hashedpassword,phone_number=user.data['phone_number'],
                                           is_active=False)
 
-        current_site = get_current_site(request)
+
         mail_subject = 'Activation link has been sent to your email id'
-        messages ={
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(register.id)),
-            'token': account_activation_token.make_token(register),
-        }
+        messages ="http://current_site.domain/activate?uid="+str(urlsafe_base64_encode(force_bytes(register.id)))+"&token="+account_activation_token.make_token(register)
+
 
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
-        send_mail(mail_subject, 'message', from_email, to_email)
+        send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['GET'])
-def verfy_email(request,token,uid):
-    uid = force_str(uid)
-    user = RegisterFreelancer.objects.filter(id=uid)
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_activate=True
-        return Response(user)
+@api_view(['POST'])
+def verfy_email(request):
+    uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    user = RegisterFreelancer.objects.filter(id=uid).first()
+    if user is not None and account_activation_token.check_token(user, request.data['token']):
+        user.is_active=True
+        user.save()
+        return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 @api_view(['POST'])

@@ -36,8 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'authentication',
     'rest_framework',
+    'authentication',
+
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'api',
         'USER':'postgres',
-        'PASSWORD':'1234',
+        'PASSWORD':'mahm01142',
         'HOST':'127.0.0.1',
         'PORT':5432
     }
@@ -137,6 +138,13 @@ REST_FRAMEWORK = {
     ],
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'PAGE_SIZE': 10
+}
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
