@@ -104,12 +104,14 @@ def emailResetPassword(request):
         return Response({'error': 'Email is required.'}, status=400)
 
     user = RegisterFreelancer.objects.filter(email=email).first()
-    if not user:
+    if not user :
         return Response({'error': 'User not found.'}, status=404)
+    # if not user.is_active:
+    #     return Response({'error': 'User not activate.'}, status=404)
 
-    token = account_activation_token._make_hash_value(user)
+    token = account_activation_token.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    reset_url = f'http://auth/rest_password/<uidb64>/<token>//{uid}/{token}/'
+    reset_url = f'http://auth/rest_password/{uid}/{token}/'
 
     send_mail(
         'Password Reset',
@@ -122,15 +124,12 @@ def emailResetPassword(request):
     return Response({'message': 'Password reset email sent.'}, status=200)
 
 
-@api_view(['GET'])
-def resetPasswordView(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = get_object_or_404(RegisterFreelancer, id=uid)
-    except (TypeError, ValueError, OverflowError, RegisterFreelancer.DoesNotExist):
-        user = None
+@api_view(['POST'])
+def resetPasswordView(request):
+    uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    user = RegisterFreelancer.objects.filter(id=uid).first()
+    if user is not None and account_activation_token.check_token(user, request.data['token']):
 
-    if user is not None and account_activation_token._make_hash_value().check_token(user, token):
-        return Response({'uid': uid}, status=status.HTTP_200_OK)
+        return Response('ok')
     else:
-        return Response({'error': 'Invalid password reset token.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_404_NOT_FOUND)
