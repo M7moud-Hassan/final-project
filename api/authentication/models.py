@@ -49,14 +49,27 @@ class RegisterFreelancer(models.Model):
     password=models.CharField(max_length=300)
     job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE,null=True)
     overview=models.CharField(max_length=500,null=True)
-    hourly_rate=models.DecimalField(null=True,max_digits=10,decimal_places=2)
-    user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True)
-    street_address=models.CharField(max_length=50,null=True)
-    city=models.CharField(max_length=50,null=True)
-    state=models.CharField(max_length=50,null=True)
-    postal_code=models.CharField(max_length=20,null=True)
-    experience=models.ManyToManyField(Experience,null=True)
-    education=models.ManyToManyField(Education,null=True)
-    skills=models.ManyToManyField(Skills,null=True)
-    services=models.ManyToManyField(Services,null=True)
+
+    hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
+
+
+    user_image=models.ImageField(upload_to='static_dirs/images/user_image')
+    street_address=models.CharField(max_length=50)
+    city=models.CharField(max_length=50)
+    state=models.CharField(max_length=50)
+    postal_code=models.CharField(max_length=20)
+    experience=models.ManyToManyField(Experience)
+    education=models.ManyToManyField(Education)
+    skills=models.ManyToManyField(Skills)
+    services=models.ManyToManyField(Services)
+
+class RegisterUser(models.Model):
+    fname=models.CharField(max_length=50)
+    lname=models.CharField(max_length=50)
+    phone=models.CharField(max_length=11)
+    email=models.EmailField(max_length=70)
+    password=models.CharField(max_length=100)
+    is_active=models.BooleanField(default=False)
+    image=models.ImageField(upload_to='static_dirs/images/user_image')
+
 

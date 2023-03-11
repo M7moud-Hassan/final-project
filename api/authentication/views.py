@@ -1,3 +1,13 @@
+
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods
+from pyexpat.errors import messages
+from .helpers import send_forget_password_mail
+from .models import RegisterFreelancer, RegisterUser
+from django.contrib.auth.hashers import make_password
+
+# Create your views here.
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -11,8 +21,8 @@ from django.contrib.auth.hashers import make_password ,check_password
 from django.core.mail import EmailMessage
 
 from .models import RegisterFreelancer
-from .serlializers import SignUpFreelancerSerializer
-from .tokens import account_activation_token
+from .serlializers import SignUpFreelancerSerializer , SignUpUserSerialzer
+from .tokens import account_activation_token , Reg_Token
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.response import Response
@@ -40,6 +50,37 @@ def signup_freeLancer(request):
         from_email = settings.EMAIL_HOST_USER
         send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def registerUserSerialzer(request):
+    user = SignUpUserSerialzer(data=request.data)
+    if user.is_valid():
+        hashPassword = make_password(user.data['password'])
+        input=RegisterUser.objects.create(fname=user.data['fname'],lname=user.data['lname'],email=user.data['email'],
+        password=hashPassword,phone=user.data['phone'])
+
+        mail_subject = 'Activation link has been sent to your email id'
+        messages = "http://current_site.domain/activate?uid=" + str(
+            urlsafe_base64_encode(force_bytes(input.id))) + "&token=" + Reg_Token.make_token(input)
+
+        to_email = [user.data['email']]
+        from_email = settings.EMAIL_HOST_USER
+        send_mail(mail_subject, messages, from_email, to_email)
+        return Response(user.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def verify_user_email(request):
+    uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    user = RegisterUser.objects.filter(id=uid).first()
+    if user is not None and Reg_Token.check_token(user, request.data['token']):
+        user.is_active=True
+        user.save()
+        return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
