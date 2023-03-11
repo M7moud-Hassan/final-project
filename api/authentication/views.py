@@ -133,3 +133,37 @@ def resetPasswordView(request):
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['POST'])
+def email_rest_password_user(request):
+    email = request.data.get('email')
+    if not email:
+        return Response({'error': 'Email is required.'}, status=400)
+
+    user = RegisterUser.objects.filter(email=email).first()
+    if not user :
+        return Response({'error': 'User not found.'}, status=404)
+
+    token = account_activation_token.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    reset_url = f'http://auth/rest_password_user/{uid}/{token}/'
+
+    send_mail(
+        'Password Reset',
+        f'Click the following link to reset your password: {reset_url}',
+        'soonfu0@gmail.com',
+        [email],
+        fail_silently=False,
+    )
+
+    return Response({'message': 'Password reset email sent.'}, status=200)
+
+
+@api_view(['POST'])
+def rest_password_view_user(request):
+    uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    user = RegisterUser.objects.filter(id=uid).first()
+    if user is not None and account_activation_token.check_token(user, request.data['token']):
+
+        return Response('ok')
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
