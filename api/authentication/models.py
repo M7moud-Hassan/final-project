@@ -5,13 +5,10 @@ from django.db import models
 class CategoryService (models.Model):
     id = models.AutoField
     name = models.CharField(max_length=50)
-
 class Services (models.Model):
     id = models.AutoField
     name = models.CharField(max_length=50)
     category_service = models.ForeignKey(CategoryService, on_delete=models.CASCADE)
-
-
 class Experience (models.Model):
     title = models.CharField(max_length=50)
     company = models.CharField(max_length=100)
@@ -21,8 +18,6 @@ class Experience (models.Model):
     end_date = models.DateField()
     description = models.CharField(max_length=500)
     id = models.AutoField
-
-
 class Education (models.Model):
     school = models.CharField(max_length=50)
     degree = models.CharField(max_length=100)
@@ -31,12 +26,9 @@ class Education (models.Model):
     to_year = models.IntegerField(4)
     description = models.CharField(max_length=500)
     id = models.AutoField
-
-
 class Skills(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
-
 class JobTitle(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
@@ -50,7 +42,7 @@ class RegisterFreelancer(models.Model):
     password=models.CharField(max_length=300)
     job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE,null=True)
     overview=models.CharField(max_length=500,null=True)
-    hourly_rate=models.DecimalField(decimal_places=2,max_length=10,null=True)
+    hourly_rate=models.DecimalField(decimal_places=2,max_digits=10,null=True)
     user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True)
     street_address=models.CharField(max_length=50,null=True)
     city=models.CharField(max_length=50,null=True)

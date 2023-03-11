@@ -1,12 +1,8 @@
 from django.db.models import fields
 from rest_framework import serializers
 
-from .models import RegistrationFreelancer
+from .models import RegisterFreelancer
 
-class PublisherSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = RegistrationFreelancer
-		fields = ('name', 'location')
 
 class SignUpFreelancerSerializer(serializers.ModelSerializer):
 	class Meta:
