@@ -36,10 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'authentication',
+<<<<<<< HEAD
 
 
+=======
+    'rest_framework',
+>>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
 ]
 
 MIDDLEWARE = [
@@ -81,7 +84,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'api',
         'USER':'postgres',
+<<<<<<< HEAD
         'PASSWORD':'12',
+=======
+        'PASSWORD':'1234',
+>>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
         'HOST':'127.0.0.1',
         'PORT':5432
     }
@@ -129,6 +136,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
 #REST_FRAMEWORK = {
 #    'DEFAULT_AUTHENTICATION_CLASSES': [
 #        'rest_framework.authentication.SessionAuthentication',
@@ -146,7 +155,6 @@ REST_FRAMEWORK = {
     ),
     'PAGE_SIZE': 10
 }
-
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'soonfu0@gmail.com'
