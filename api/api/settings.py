@@ -36,10 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'authentication',
+
     'corsheaders',
 
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -136,7 +137,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST_FRAMEWORK = {
+
+
+#REST_FRAMEWORK = {
 #    'DEFAULT_AUTHENTICATION_CLASSES': [
 #        'rest_framework.authentication.SessionAuthentication',
 #        'rest_framework.authentication.TokenAuthentication',
@@ -144,7 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #    'DEFAULT_PERMISSION_CLASSES': [
 #        'rest_framework.permissions.IsAuthenticated',
 #    ],
-# }
+#}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -153,7 +156,6 @@ REST_FRAMEWORK = {
     ),
     'PAGE_SIZE': 10
 }
-
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'soonfu0@gmail.com'
