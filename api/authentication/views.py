@@ -1,9 +1,10 @@
-
+import json
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from pyexpat.errors import messages
 from .helpers import send_forget_password_mail
-from .models import RegisterFreelancer, RegisterUser, Experience
+from .models import RegisterFreelancer, RegisterUser, Experience, Services, Skills
 from django.contrib.auth.hashers import make_password
 
 # Create your views here.
@@ -41,10 +42,8 @@ def signup_freeLancer(request):
                                                    user_image=None,street_address=None,city=None,
                                                    state=None,postal_code=None)
 
-
         mail_subject = 'Activation link has been sent to your email id'
         messages ="http://current_site.domain/activate?uid="+str(urlsafe_base64_encode(force_bytes(register.id)))+"&token="+account_activation_token.make_token(register)
-
 
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
@@ -169,7 +168,53 @@ def rest_password_view_user(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['GET'])
-def addExperinece (request, id):
-    Experineces = Experience.objects.filter(id=id)
+@api_view(['POST'])
+def addExperinece (request):
+
+    data = json.loads(request.body)
+    for exp in data:
+        Experts = Experience.objects.create(
+            title=exp['title'],
+            company=exp['company'],
+            location=exp['location'],
+            is_current_work_in_company=exp['is_current_work_in_company'],
+            start_date=exp['start_date'],
+            end_date=exp['end_date'],
+            description=exp['description']
+            )
+        relate_id = exp['relate_id']
+        freelance = RegisterFreelancer.objects.filter(id=relate_id).first()
+        freelance.experience.add(Experts)
+
+    return JsonResponse({'message': 'Add Experience data '})
+@api_view(['POST'])
+def addServices(request):
+    fetchUser = RegisterFreelancer.objects.filter(id=int(request.data['id'])).first()
+    data = request.data['services']
+    for service in data:
+        serv=Services.objects.filter(id=service).first()
+        fetchUser.services.add(serv)
+
+    return JsonResponse({'message': 'services added '})
+
+@api_view(['POST'])
+def addSkills(request):
+    fetchUser = RegisterFreelancer.objects.filter(id=int(request.data['id'])).first()
+    data = request.data['skills']
+    for skill in data:
+        skilll=Skills.objects.filter(id=skill).first()
+        fetchUser.skills.add(skilll)
+
+    return JsonResponse({'message': 'Skills added '})
+
+
+@api_view(['POST'])
+def addJobTitle(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        user.job_title=request.data['jobtitle']
+        user.save()
+        return JsonResponse({'message': 'Job title added'})
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
