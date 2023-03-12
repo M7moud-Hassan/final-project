@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from pyexpat.errors import messages
 from .helpers import send_forget_password_mail
-from .models import RegisterFreelancer, RegisterUser
+from .models import RegisterFreelancer, RegisterUser, Experience
 from django.contrib.auth.hashers import make_password
 
 # Create your views here.
@@ -122,8 +122,6 @@ def emailResetPassword(request):
     )
 
     return Response({'message': 'Password reset email sent.'}, status=200)
-
-
 @api_view(['POST'])
 def resetPasswordView(request):
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
@@ -169,3 +167,9 @@ def rest_password_view_user(request):
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def addExperinece (request, id):
+    Experineces = Experience.objects.filter(id=id)
+
