@@ -98,22 +98,31 @@ def resetPasswordView(request):
 
 
 
+
+
+
 @api_view(['POST'])
 def save_education(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        education = Education()
-        education.school = data['school']
-        education.degree = data['degree']
-        education.study = data['study']
-        education.from_year = data['from_year']
-        education.to_year = data['to_year']
-        education.description = data['description']
-        education.save()
-        return JsonResponse({'id': education.id})
-    else:
-        return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+        for education_data in data:
+            education = Education.objects.create(
+                school=education_data['school'],
+                degree=education_data['degree'],
+                study=education_data['study'],
+                from_year=education_data['from_year'],
+                to_year=education_data['to_year'],
+                description=education_data['description']
+            )
+
+            freelancer_register_id = education_data['freelancer_register_id']
+            freelancer_register = RegisterFreelancer.objects.filter(id=freelancer_register_id).first()
+            freelancer_register.education.add(education)
+
+        return JsonResponse({'message': 'Educations saved successfully.'})
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
 
 @api_view(['POST'])
