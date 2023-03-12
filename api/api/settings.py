@@ -37,12 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'authentication',
-<<<<<<< HEAD
-
-
-=======
     'rest_framework',
->>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
+
 ]
 
 MIDDLEWARE = [
@@ -84,11 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'api',
         'USER':'postgres',
-<<<<<<< HEAD
         'PASSWORD':'12',
-=======
-        'PASSWORD':'1234',
->>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
         'HOST':'127.0.0.1',
         'PORT':5432
     }

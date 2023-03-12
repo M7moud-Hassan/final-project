@@ -1,22 +1,38 @@
 from django.db.models import fields
 from rest_framework import serializers
-<<<<<<< HEAD
 
-from .models import RegisterFreelancer
-=======
-from .models import RegisterFreelancer , RegisterUser
->>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
+from .models import RegisterFreelancer, RegisterUser, CategoryService, Services, Skills
+
+
+class CategoryServiceSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = CategoryService
+        fields = '__all__'
+
+
+class ServicesSerializer(serializers.ModelSerializer):
+    services = CategoryServiceSerializer(many=True, read_only=True)
+    service_nams = serializers.CharField(source="CategoryService.name", read_only=True)
+    class Meta:
+        model = Services
+        fields = '__all__'
+
+
+class SkillsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skills
+        fields = '__all__'
 
 
 class SignUpFreelancerSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = RegisterFreelancer
-		fields = ('first_name', 'last_name','email','phone_number','password')
+    class Meta:
+        model = RegisterFreelancer
+        fields = ('first_name', 'last_name', 'email', 'phone_number', 'password')
 
-<<<<<<< HEAD
-=======
+
 class SignUpUserSerialzer(serializers.ModelSerializer):
-	class Meta:
-		model = RegisterUser
-		fields = ('fname', 'lname','email','phone','password')
->>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
+    class Meta:
+        model = RegisterUser
+        fields = ('fname', 'lname', 'email', 'phone', 'password')

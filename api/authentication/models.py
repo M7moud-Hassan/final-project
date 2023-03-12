@@ -1,15 +1,20 @@
 from django.db import models
 
+
 # Create your models here.
 
-class CategoryService (models.Model):
+class CategoryService(models.Model):
     id = models.AutoField
     name = models.CharField(max_length=50)
-class Services (models.Model):
+
+
+class Services(models.Model):
     id = models.AutoField
     name = models.CharField(max_length=50)
     category_service = models.ForeignKey(CategoryService, on_delete=models.CASCADE)
-class Experience (models.Model):
+
+
+class Experience(models.Model):
     title = models.CharField(max_length=50)
     company = models.CharField(max_length=100)
     location = models.CharField(max_length=200)
@@ -18,7 +23,9 @@ class Experience (models.Model):
     end_date = models.DateField()
     description = models.CharField(max_length=500)
     id = models.AutoField
-class Education (models.Model):
+
+
+class Education(models.Model):
     school = models.CharField(max_length=50)
     degree = models.CharField(max_length=100)
     study = models.CharField(max_length=100)
@@ -26,56 +33,45 @@ class Education (models.Model):
     to_year = models.IntegerField(4)
     description = models.CharField(max_length=500)
     id = models.AutoField
+
+
 class Skills(models.Model):
-    name=models.CharField(max_length=50)
-    id=models.AutoField
+    name = models.CharField(max_length=50)
+    id = models.AutoField
+
+
 class JobTitle(models.Model):
-    name=models.CharField(max_length=50)
-    id=models.AutoField
+    name = models.CharField(max_length=50)
+    id = models.AutoField
+
+
 class RegisterFreelancer(models.Model):
     id = models.AutoField
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email=models.CharField(max_length=100)
-    is_active=models.BooleanField(default=False)
-    phone_number=models.CharField(max_length=11)
-    password=models.CharField(max_length=300)
-    job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE,null=True)
-    overview=models.CharField(max_length=500,null=True)
-<<<<<<< HEAD
-    hourly_rate=models.DecimalField(decimal_places=2,max_digits=10,null=True)
-    user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True)
-    street_address=models.CharField(max_length=50,null=True)
-    city=models.CharField(max_length=50,null=True)
-    state=models.CharField(max_length=50,null=True)
-    postal_code=models.CharField(max_length=20,null=True)
-    experience=models.ManyToManyField(Experience,null=True)
-    education=models.ManyToManyField(Education,null=True)
-    skills=models.ManyToManyField(Skills,null=True)
-    services=models.ManyToManyField(Services,null=True)
-=======
+    email = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=False)
+    phone_number = models.CharField(max_length=11)
+    password = models.CharField(max_length=300)
+    job_title = models.ForeignKey(JobTitle, on_delete=models.CASCADE, null=True)
+    overview = models.CharField(max_length=500, null=True)
+    hourly_rate = models.DecimalField(decimal_places=2, max_digits=10, null=True)
+    user_image = models.ImageField(upload_to='static_dirs/images/user_image', null=True)
+    street_address = models.CharField(max_length=50, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=50, null=True)
+    postal_code = models.CharField(max_length=20, null=True)
+    experience = models.ManyToManyField(Experience, null=True)
+    education = models.ManyToManyField(Education, null=True)
+    skills = models.ManyToManyField(Skills, null=True)
+    services = models.ManyToManyField(Services, null=True)
 
-    hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
-
-
-    user_image=models.ImageField(upload_to='static_dirs/images/user_image')
-    street_address=models.CharField(max_length=50)
-    city=models.CharField(max_length=50)
-    state=models.CharField(max_length=50)
-    postal_code=models.CharField(max_length=20)
-    experience=models.ManyToManyField(Experience)
-    education=models.ManyToManyField(Education)
-    skills=models.ManyToManyField(Skills)
-    services=models.ManyToManyField(Services)
 
 class RegisterUser(models.Model):
-    fname=models.CharField(max_length=50)
-    lname=models.CharField(max_length=50)
-    phone=models.CharField(max_length=11)
-    email=models.EmailField(max_length=70)
-    password=models.CharField(max_length=100)
-    is_active=models.BooleanField(default=False)
-    image=models.ImageField(upload_to='static_dirs/images/user_image')
-
->>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
-
+    fname = models.CharField(max_length=50)
+    lname = models.CharField(max_length=50)
+    phone = models.CharField(max_length=11)
+    email = models.EmailField(max_length=70)
+    password = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=False)
+    image = models.ImageField(upload_to='static_dirs/images/user_image')
