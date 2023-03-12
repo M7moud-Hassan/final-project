@@ -18,6 +18,9 @@ from django.core.mail import send_mail
 from rest_framework.response import Response
 from django.utils.encoding import force_str
 from django.shortcuts import get_object_or_404
+import json
+from django.http import JsonResponse
+from .models import Education
 
 @api_view(['POST'])
 def signup_freeLancer(request):
@@ -92,3 +95,35 @@ def resetPasswordView(request):
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['POST'])
+def save_education(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        education = Education()
+        education.school = data['school']
+        education.degree = data['degree']
+        education.study = data['study']
+        education.from_year = data['from_year']
+        education.to_year = data['to_year']
+        education.description = data['description']
+        education.save()
+        return JsonResponse({'id': education.id})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+
+
+@api_view(['POST'])
+def save_overview(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        registerFreelancer = RegisterFreelancer()
+        registerFreelancer.id = data['id']
+        registerFreelancer.overview = data['overview']
+        registerFreelancer.save()
+        return JsonResponse({'id': registerFreelancer.id})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
