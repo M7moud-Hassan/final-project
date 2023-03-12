@@ -1,53 +1,19 @@
-from .models import RegisterFreelancer, RegisterUser, Skills
-
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework import status
-from rest_framework.decorators import api_view
-# Create your views here.
 from django.contrib.auth.hashers import make_password, check_password
-from django.core.mail import EmailMessage
-
-from .models import RegisterFreelancer, CategoryService,Services
 from .serlializers import *
-
 from .tokens import account_activation_token, Reg_Token
+from .models import RegisterFreelancer
+from .serlializers import SignUpFreelancerSerializer
+from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.response import Response
+from django.contrib.auth import get_user_model
 from django.utils.encoding import force_str
-from django.shortcuts import get_object_or_404
-
-
-@api_view(['GET'])
-def view_service_serializer(request):
-    # checking for the parameters from the URL
-    if request.query_params:
-        items = Services.objects.filter(**request.query_params.dict())
-    else:
-        items = Services.objects.all()
-
-    # if there is something in items else raise error
-    if items:
-        serializer = ServicesSerializer(items, many=True)
-        return Response(serializer.data)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-@api_view(['GET'])
-def view_skills_serializer(request):
-    # checking for the parameters from the URL
-    if request.query_params:
-        items = Skills.objects.filter(**request.query_params.dict())
-    else:
-        items = Skills.objects.all()
-
-    # if there is something in items else raise error
-    if items:
-        serializer = SkillsSerializer(items, many=True)
-        return Response(serializer.data)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+from .token import email_verification_token
+from rest_framework.decorators import api_view
 
 
 @api_view(['POST'])
@@ -107,14 +73,13 @@ def verify_user_email(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['POST'])
-def verfy_email(request):
-    uid = force_str(urlsafe_base64_decode(request.data['uid']))
-    user = RegisterFreelancer.objects.filter(id=uid).first()
-    if user is not None and account_activation_token.check_token(user, request.data['token']):
-        user.is_active = True
-        user.save()
-        return Response('ok')
+@api_view(['GET'])
+def verfy_email(request, token, uid):
+    uid = force_str(uid)
+    user = RegisterFreelancer.objects.filter(id=uid)
+    if user is not None and email_verification_token.check_token(user, token):
+        user.is_activate = True
+        return Response(user)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -192,5 +157,37 @@ def rest_password_view_user(request):
     if user is not None and account_activation_token.check_token(user, request.data['token']):
 
         return Response('ok')
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def view_service_serializer(request):
+    # checking for the parameters from the URL
+    if request.query_params:
+        items = Services.objects.filter(**request.query_params.dict())
+    else:
+        items = Services.objects.all()
+
+    # if there is something in items else raise error
+    if items:
+        serializer = ServicesSerializer(items, many=True)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def view_skills_serializer(request):
+    # checking for the parameters from the URL
+    if request.query_params:
+        items = Skills.objects.filter(**request.query_params.dict())
+    else:
+        items = Skills.objects.all()
+
+    # if there is something in items else raise error
+    if items:
+        serializer = SkillsSerializer(items, many=True)
+        return Response(serializer.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)

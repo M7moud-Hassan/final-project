@@ -1,12 +1,8 @@
-from django.db.models import fields
 from rest_framework import serializers
-
 from .models import RegisterFreelancer, RegisterUser, CategoryService, Services, Skills
 
 
 class CategoryServiceSerializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = CategoryService
         fields = '__all__'
@@ -36,3 +32,7 @@ class SignUpUserSerialzer(serializers.ModelSerializer):
     class Meta:
         model = RegisterUser
         fields = ('fname', 'lname', 'email', 'phone', 'password')
+
+
+
+

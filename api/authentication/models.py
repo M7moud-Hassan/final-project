@@ -75,3 +75,4 @@ class RegisterUser(models.Model):
     password = models.CharField(max_length=100)
     is_active = models.BooleanField(default=False)
     image = models.ImageField(upload_to='static_dirs/images/user_image')
+

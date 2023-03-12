@@ -1,8 +1,6 @@
-
-from authentication.views import *
-
 from django.contrib import admin
 from django.urls import path
+
 
 
 from .views import *
@@ -17,4 +15,5 @@ urlpatterns = [
     path('view_service/', view_service_serializer, name='view_service_serializer'),
     path('view_skills/', view_skills_serializer, name='view_skills_serializer'),
  ]
+
 
