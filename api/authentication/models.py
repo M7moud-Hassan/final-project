@@ -1,8 +1,6 @@
 from django.db import models
 
 # Create your models here.
-
-
 class CategoryService (models.Model):
     id = models.AutoField
     name = models.CharField(max_length=50)
@@ -33,8 +31,11 @@ class Education (models.Model):
     to_year = models.IntegerField(4)
     description = models.CharField(max_length=500)
     id = models.AutoField
+# <<<<<<< HEAD
 
 
+# =======
+# >>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
 class Skills(models.Model):
     name = models.CharField(max_length=50)
     id = models.AutoField
@@ -46,9 +47,12 @@ class JobTitle(models.Model):
 
 
 class RegisterFreelancer(models.Model):
+
     id = models.AutoField
+
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+# <<<<<<< HEAD
     email = models.CharField(max_length=100)
     is_active = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=11)
@@ -65,3 +69,35 @@ class RegisterFreelancer(models.Model):
     education = models.ManyToManyField(Education)
     skills = models.ManyToManyField(Skills)
     services = models.ManyToManyField(Services)
+# =======
+    email=models.CharField(max_length=100)
+    is_active=models.BooleanField(default=False)
+    phone_number=models.CharField(max_length=11)
+    password=models.CharField(max_length=300)
+    job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE,null=True)
+    overview=models.CharField(max_length=500,null=True)
+
+    hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
+
+
+    user_image=models.ImageField(upload_to='static_dirs/images/user_image')
+    street_address=models.CharField(max_length=50)
+    city=models.CharField(max_length=50)
+    state=models.CharField(max_length=50)
+    postal_code=models.CharField(max_length=20)
+    experience=models.ManyToManyField(Experience)
+    education=models.ManyToManyField(Education)
+    skills=models.ManyToManyField(Skills)
+    services=models.ManyToManyField(Services)
+
+class RegisterUser(models.Model):
+    fname=models.CharField(max_length=50)
+    lname=models.CharField(max_length=50)
+    phone=models.CharField(max_length=11)
+    email=models.EmailField(max_length=70)
+    password=models.CharField(max_length=100)
+    is_active=models.BooleanField(default=False)
+    image=models.ImageField(upload_to='static_dirs/images/user_image')
+
+
+# >>>>>>> 670acac9a8c3f3acaf3fa1a75ededd29389c0c95
