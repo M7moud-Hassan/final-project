@@ -170,7 +170,6 @@ def resetPasswordView(request):
 
         return Response({'error': 'Invalid password reset token.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -315,9 +314,12 @@ def addSkills(request):
 def addJobTitle(request):
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
-        user.job_title=request.data['jobtitle']
+        user.job_title=request.data['job_title']
         user.save()
         return JsonResponse({'message': 'Job title added'})
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 
 @api_view(['POST'])
