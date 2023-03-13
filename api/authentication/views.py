@@ -122,11 +122,6 @@ def resetPasswordView(request):
         # return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-
-
-
-
-
 @api_view(['POST'])
 def save_education(request):
     if request.method == 'POST':
