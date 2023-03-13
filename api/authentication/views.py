@@ -61,15 +61,6 @@ def signup_freeLancer(request):
                                                    state=None,postal_code=None)
 
         mail_subject = 'Activation link has been sent to your email id'
-        messages ="http://current_site.domain/activate?uid="+str(urlsafe_base64_encode(force_bytes(register.id)))+"&token="+account_activation_token.make_token(register)
-        register = RegisterFreelancer.objects.create(first_name=user.data['first_name'],
-                                                     last_name=user.data['last_name'], email=user.data['email'],
-                                                     password=hashedpassword, phone_number=user.data['phone_number'],
-                                                     is_active=False, job_title=None, overview=None, hourly_rate=None,
-                                                     user_image=None, street_address=None, city=None,
-                                                     state=None, postal_code=None)
-
-        mail_subject = 'Activation link has been sent to your email id'
         messages = "http://current_site.domain/activate?uid=" + str(
             urlsafe_base64_encode(force_bytes(register.id))) + "&token=" + account_activation_token.make_token(register)
 
@@ -317,7 +308,8 @@ def addJobTitle(request):
         user.job_title=request.data['jobtitle']
         user.save()
         return JsonResponse({'message': 'Job title added'})
-
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def check_email_freelancer(request) :
