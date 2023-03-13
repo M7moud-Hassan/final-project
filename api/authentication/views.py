@@ -1,23 +1,4 @@
-
-import json
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.views.decorators.http import require_http_methods
-from pyexpat.errors import messages
-from .helpers import send_forget_password_mail
 from .models import RegisterFreelancer, RegisterUser, Experience, Services, Skills
-from django.contrib.auth.hashers import make_password
-
-# Create your views here.
-# <<<<<<< HEAD
-
-# =======
-
-from django.contrib.sites.shortcuts import get_current_site
-from django.shortcuts import render
-from django.template.loader import render_to_string
-
-
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework import status
@@ -30,24 +11,13 @@ from .tokens import account_activation_token
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.response import Response
-from django.contrib.auth import get_user_model
 from django.utils.encoding import force_str
-from django.shortcuts import get_object_or_404
 import json
 from django.http import JsonResponse
 from .models import Education
 from .tokens import account_activation_token
 from rest_framework.decorators import api_view
 
-@api_view(['GET'])
-def verfy_email(request,token,uid):
-    uid = force_str(uid)
-    user = RegisterFreelancer.objects.filter(id=uid)
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_activate=True
-        return Response(user)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 @api_view(['POST'])
 def signup_freeLancer(request):
     user = SignUpFreelancerSerializer(data=request.data)
@@ -56,18 +26,7 @@ def signup_freeLancer(request):
         register=RegisterFreelancer.objects.create(first_name=user.data['first_name'],
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
-                                          is_active=False,job_title=None,overview=None,hourly_rate=None,
-                                                   user_image=None,street_address=None,city=None,
-                                                   state=None,postal_code=None)
-
-        mail_subject = 'Activation link has been sent to your email id'
-        messages ="http://current_site.domain/activate?uid="+str(urlsafe_base64_encode(force_bytes(register.id)))+"&token="+account_activation_token.make_token(register)
-        register = RegisterFreelancer.objects.create(first_name=user.data['first_name'],
-                                                     last_name=user.data['last_name'], email=user.data['email'],
-                                                     password=hashedpassword, phone_number=user.data['phone_number'],
-                                                     is_active=False, job_title=None, overview=None, hourly_rate=None,
-                                                     user_image=None, street_address=None, city=None,
-                                                     state=None, postal_code=None)
+    )
 
         mail_subject = 'Activation link has been sent to your email id'
         messages = "http://current_site.domain/activate?uid=" + str(
@@ -101,33 +60,21 @@ def registerUserSerialzer(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-
 @api_view(['POST'])
-def verify_user_email(request):
-    uid = force_str(urlsafe_base64_decode(request.data['uid']))
-    user = RegisterUser.objects.filter(id=uid).first()
-    if user is not None and Reg_Token.check_token(user, request.data['token']):
-        user.is_active = True
-        user.save()
-        return Response('ok')
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['POST'])
-def verfy_email(request):
-    print(request.data)
+def verfy_email_free(request):
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     user = RegisterFreelancer.objects.filter(id=uid).first()
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_active=True
         user.save()
         return Response('ok')
-@api_view(['GET'])
-def verfy_email(request, token, uid):
-    uid = force_str(uid)
-    user = RegisterFreelancer.objects.filter(id=uid)
-    if user is not None and account_activation_token.check_token(user, token):
+
+
+@api_view(['POST'])
+def verfy_email_register(request):
+    uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    user = RegisterUser.objects.filter(id=uid)
+    if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_activate = True
         return Response(user)
     else:
@@ -169,11 +116,6 @@ def resetPasswordView(request):
     else:
 
         return Response({'error': 'Invalid password reset token.'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
 
 
 
@@ -248,24 +190,32 @@ def rest_password_view_user(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['post'])
+@api_view(['POST'])
 def login(request):
+    print(request.data)
     email= request.data['email']
     password=request.data['password']
-    hash_password=make_password(password)
-    user_free=RegisterFreelancer.objects.filter(email=email,password=hash_password).first()
+
+    user_free=RegisterFreelancer.objects.filter(email=email).first()
     if user_free:
-        if user_free.is_active:
-            return Response({"freeLancer": user_free.id})
-        else:
-            return Response({"freeLancer": 'not active'})
-    else:
-        user_free=RegisterUser.objects.filter(email=email,password=hash_password).second()
-        if user_free:
+        if check_password(password,user_free.password):
             if user_free.is_active:
-                return Response({"user": user_free.id})
+                return Response({"freeLancer": user_free.id})
             else:
                 return Response({"freeLancer": 'not active'})
+        else:
+            return Response({"freeLancer": 'password worng'})
+    else:
+        user_free=RegisterUser.objects.filter(email=email).first()
+
+        if user_free:
+            if check_password(password, user_free.password):
+                if user_free.is_active:
+                    return Response({"user": user_free.id})
+                else:
+                    return Response({"freeLancer": 'not active'})
+            else:
+                return Response({"freeLancer": 'password worog'})
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -319,6 +269,7 @@ def addJobTitle(request):
         return JsonResponse({'message': 'Job title added'})
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 
 
