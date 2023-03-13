@@ -29,6 +29,9 @@ from django.core.mail import send_mail
 from rest_framework.response import Response
 from django.utils.encoding import force_str
 from django.shortcuts import get_object_or_404
+import json
+from django.http import JsonResponse
+from .models import Education
 
 @api_view(['POST'])
 def signup_freeLancer(request):
@@ -132,6 +135,47 @@ def resetPasswordView(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+
+
+
+
+
+@api_view(['POST'])
+def save_education(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        for education_data in data:
+            education = Education.objects.create(
+                school=education_data['school'],
+                degree=education_data['degree'],
+                study=education_data['study'],
+                from_year=education_data['from_year'],
+                to_year=education_data['to_year'],
+                description=education_data['description']
+            )
+
+            freelancer_register_id = education_data['freelancer_register_id']
+            freelancer_register = RegisterFreelancer.objects.filter(id=freelancer_register_id).first()
+            freelancer_register.education.add(education)
+
+        return JsonResponse({'message': 'Educations saved successfully.'})
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+
+
+@api_view(['POST'])
+def save_overview(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        registerFreelancer = RegisterFreelancer()
+        registerFreelancer.id = data['id']
+        registerFreelancer.overview = data['overview']
+        registerFreelancer.save()
+        return JsonResponse({'id': registerFreelancer.id})
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 @api_view(['POST'])
 def email_rest_password_user(request):

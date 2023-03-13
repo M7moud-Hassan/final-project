@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'authentication',
+
+    'corsheaders',
+
     'rest_framework',
 ]
 
@@ -48,6 +51,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
 ]
 
 ROOT_URLCONF = 'api.urls'
@@ -130,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-#REST_FRAMEWORK = {
+# REST_FRAMEWORK = {
 #    'DEFAULT_AUTHENTICATION_CLASSES': [
 #        'rest_framework.authentication.SessionAuthentication',
 #        'rest_framework.authentication.TokenAuthentication',
@@ -138,7 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #    'DEFAULT_PERMISSION_CLASSES': [
 #        'rest_framework.permissions.IsAuthenticated',
 #    ],
-#}
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
