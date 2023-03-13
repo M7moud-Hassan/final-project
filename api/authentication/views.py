@@ -39,15 +39,6 @@ from .models import Education
 from .tokens import account_activation_token
 from rest_framework.decorators import api_view
 
-@api_view(['GET'])
-def verfy_email(request):
-    uid = force_str(request.data['uid'])
-    user = RegisterFreelancer.objects.filter(id=uid)
-    if user is not None and account_activation_token.check_token(user, request.data['token']):
-        user.is_activate=True
-        return Response(user)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 @api_view(['POST'])
 def signup_freeLancer(request):
     user = SignUpFreelancerSerializer(data=request.data)
@@ -106,19 +97,20 @@ def verify_user_email(request):
 
 
 @api_view(['POST'])
-def verfy_email(request):
-    print(request.data)
+def verfy_email_free(request):
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     user = RegisterFreelancer.objects.filter(id=uid).first()
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_active=True
         user.save()
         return Response('ok')
+
+
 @api_view(['GET'])
-def verfy_email(request, token, uid):
-    uid = force_str(uid)
-    user = RegisterFreelancer.objects.filter(id=uid)
-    if user is not None and account_activation_token.check_token(user, token):
+def verfy_email_register(request):
+    uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    user = RegisterUser.objects.filter(id=uid)
+    if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_activate = True
         return Response(user)
     else:
