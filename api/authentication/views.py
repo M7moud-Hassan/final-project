@@ -56,7 +56,7 @@ def signup_freeLancer(request):
         register=RegisterFreelancer.objects.create(first_name=user.data['first_name'],
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
-                                          is_active=False,job_title=None,overview=None,hourly_rate=None,
+                                          is_active=False,job_title=None,overview=None,
                                                    user_image=None,street_address=None,city=None,
                                                    state=None,postal_code=None)
 
@@ -261,7 +261,7 @@ def login(request):
         else:
             return Response({"freeLancer": 'not active'})
     else:
-        user_free=RegisterUser.objects.filter(email=email,password=hash_password).second()
+        user_free=RegisterUser.objects.filter(email=email,password=hash_password).first()
         if user_free:
             if user_free.is_active:
                 return Response({"user": user_free.id})
@@ -269,7 +269,6 @@ def login(request):
                 return Response({"freeLancer": 'not active'})
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(['POST'])
 def addExperinece (request):
