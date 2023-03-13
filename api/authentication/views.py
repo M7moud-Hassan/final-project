@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
 from pyexpat.errors import messages
@@ -170,3 +169,24 @@ def rest_password_view_user(request):
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['post'])
+def login(request):
+    email= request.data['email']
+    password=request.data['password']
+    hash_password=make_password(password)
+    user_free=RegisterFreelancer.objects.filter(email=email,password=hash_password).first()
+    if user_free:
+        if user_free.is_active:
+            return Response({"freeLancer": user_free.id})
+        else:
+            return Response({"freeLancer": 'not active'})
+    else:
+        user_free=RegisterUser.objects.filter(email=email,password=hash_password).second()
+        if user_free:
+            if user_free.is_active:
+                return Response({"user": user_free.id})
+            else:
+                return Response({"freeLancer": 'not active'})
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
