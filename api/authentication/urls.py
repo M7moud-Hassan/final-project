@@ -9,9 +9,10 @@ urlpatterns = [
 
     path('register/',registerUserSerialzer,name='register'),
 
-    path('activate/',verfy_email, name='activate'),
+    path('activate_freelancer/',verfy_email, name='activate'),
     path('activate/',
          verfy_email, name='activate'),
     path('reset_password/', resetPasswordView, name='reset_password'),
     path('email_reset_password/', emailResetPassword, name='email_reset_password'),
+
  ]
