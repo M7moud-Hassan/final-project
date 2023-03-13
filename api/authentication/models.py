@@ -52,7 +52,6 @@ class RegisterFreelancer(models.Model):
     job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE,null=True)
     overview=models.CharField(max_length=500,null=True)
 
-    # hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
 
     user_image=models.ImageField(upload_to='static_dirs/images/user_image')
     street_address=models.CharField(max_length=50)

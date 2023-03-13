@@ -56,9 +56,9 @@ def signup_freeLancer(request):
         register=RegisterFreelancer.objects.create(first_name=user.data['first_name'],
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
-                                          is_active=False,job_title=None,overview=None,
-                                                   user_image=None,street_address='None',city=None,
-                                                   state=None,postal_code=None)
+                                          is_active=False,job_title=None,overview='',
+                                                   user_image=None,street_address='',city='',
+                                                   state='',postal_code='')
 
         mail_subject = 'Activation link has been sent to your email id'
         messages = "http://current_site.domain/activate?uid=" + str(
@@ -240,25 +240,34 @@ def rest_password_view_user(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['post'])
+@api_view(['POST'])
 def login(request):
     print(request.data)
     email= request.data['email']
     password=request.data['password']
-    hash_password=make_password(password)
-    user_free=RegisterFreelancer.objects.filter(email=email,password=hash_password).first()
+
+    user_free=RegisterFreelancer.objects.filter(email=email).first()
     if user_free:
-        if user_free.is_active:
-            return Response({"freeLancer": user_free.id})
-        else:
-            return Response({"freeLancer": 'not active'})
-    else:
-        user_free=RegisterUser.objects.filter(email=email,password=hash_password).first()
-        if user_free:
+
+        if check_password(password,user_free.password):
+
             if user_free.is_active:
-                return Response({"user": user_free.id})
+                return Response({"freeLancer": user_free.id})
             else:
                 return Response({"freeLancer": 'not active'})
+        else:
+            return Response({"freeLancer": 'password worng'})
+    else:
+        user_free=RegisterUser.objects.filter(email=email).first()
+
+        if user_free:
+            if check_password(password, user_free.password):
+                if user_free.is_active:
+                    return Response({"user": user_free.id})
+                else:
+                    return Response({"freeLancer": 'not active'})
+            else:
+                return Response({"freeLancer": 'password worog'})
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
