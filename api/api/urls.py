@@ -1,8 +1,7 @@
 
 from django.contrib import admin
-from django.urls import path,include
 
-from authentication.views import resetPasswordView, emailResetPassword
+from django.urls import path,include
 
 
 

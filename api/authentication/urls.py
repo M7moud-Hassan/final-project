@@ -28,4 +28,3 @@ urlpatterns = [
     path('save_overview/', save_overview, name='save_overview'),
  ]
 
-
