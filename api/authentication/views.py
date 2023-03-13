@@ -161,8 +161,6 @@ def resetPasswordView(request):
 
         return Response({'error': 'Invalid password reset token.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 
 
