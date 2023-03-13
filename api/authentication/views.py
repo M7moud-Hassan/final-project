@@ -40,10 +40,10 @@ from .tokens import account_activation_token
 from rest_framework.decorators import api_view
 
 @api_view(['GET'])
-def verfy_email(request,token,uid):
-    uid = force_str(uid)
+def verfy_email(request):
+    uid = force_str(request.data['uid'])
     user = RegisterFreelancer.objects.filter(id=uid)
-    if user is not None and account_activation_token.check_token(user, token):
+    if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_activate=True
         return Response(user)
     else:
