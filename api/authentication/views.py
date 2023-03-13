@@ -57,7 +57,7 @@ def signup_freeLancer(request):
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
                                           is_active=False,job_title=None,overview=None,
-                                                   user_image=None,street_address=None,city=None,
+                                                   user_image=None,street_address='None',city=None,
                                                    state=None,postal_code=None)
 
         mail_subject = 'Activation link has been sent to your email id'
@@ -242,6 +242,7 @@ def rest_password_view_user(request):
 
 @api_view(['post'])
 def login(request):
+    print(request.data)
     email= request.data['email']
     password=request.data['password']
     hash_password=make_password(password)
