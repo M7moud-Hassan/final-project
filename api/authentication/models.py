@@ -21,6 +21,8 @@ class Experience (models.Model):
     description = models.CharField(max_length=500)
     id = models.AutoField
 
+    
+
 
 class Education (models.Model):
     school = models.CharField(max_length=50)
