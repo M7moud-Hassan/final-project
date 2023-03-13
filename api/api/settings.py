@@ -91,6 +91,9 @@ DATABASES = {
         'NAME': 'api',
         'USER':'postgres',
         'PASSWORD':'mahm01142',
+        'PASSWORD':'234',
+
+        'PASSWORD':'234',
         'HOST':'127.0.0.1',
         'PORT':5432
     }

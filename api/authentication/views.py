@@ -9,6 +9,9 @@ from .models import RegisterFreelancer, RegisterUser, Experience, Services, Skil
 from django.contrib.auth.hashers import make_password
 
 # Create your views here.
+# <<<<<<< HEAD
+
+# =======
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render
@@ -315,6 +318,15 @@ def addJobTitle(request):
         user.job_title=request.data['jobtitle']
         user.save()
         return JsonResponse({'message': 'Job title added'})
+
+
+@api_view(['POST'])
+def check_email_freelancer(request) :
+    email = request.data.get['email']
+    user = RegisterFreelancer.objects.filter(email=email).first()
+    if user:
+        return Response('ok')
+
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -347,5 +359,11 @@ def view_skills_serializer(request):
     if items:
         serializer = SkillsSerializer(items, many=True)
         return Response(serializer.data)
+
+def check_email_user(request) :
+    email = request.data['email']
+    user = RegisterUser.objects.filter(email=email).first()
+    if user:
+        return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
