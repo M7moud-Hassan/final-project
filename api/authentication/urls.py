@@ -26,5 +26,6 @@ urlpatterns = [
     path('email_reset_password/', emailResetPassword, name='email_reset_password'),
     path('save_education/', save_education, name='save_education'),
     path('save_overview/', save_overview, name='save_overview'),
+    path('login/', login, name='save_overview'),
  ]
 

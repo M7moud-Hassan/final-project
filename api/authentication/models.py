@@ -52,7 +52,7 @@ class RegisterFreelancer(models.Model):
     job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE,null=True)
     overview=models.CharField(max_length=500,null=True)
 
-   
+
 
 
     user_image=models.ImageField(upload_to='static_dirs/images/user_image')
