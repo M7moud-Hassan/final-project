@@ -66,6 +66,7 @@ class RegisterFreelancer(models.Model):
     services=models.ManyToManyField(Services)
 
 class RegisterUser(models.Model):
+    id = models.AutoField
     fname=models.CharField(max_length=50)
     lname=models.CharField(max_length=50)
     phone=models.CharField(max_length=11)
