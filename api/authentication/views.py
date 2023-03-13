@@ -187,7 +187,6 @@ def rest_password_view_user(request):
 
 @api_view(['POST'])
 def login(request):
-    print(request.data)
     email= request.data['email']
     password=request.data['password']
 
