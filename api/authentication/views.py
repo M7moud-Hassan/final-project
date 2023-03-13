@@ -26,9 +26,7 @@ def signup_freeLancer(request):
         register=RegisterFreelancer.objects.create(first_name=user.data['first_name'],
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
-                                          is_active=False,job_title=None,overview='None',
-                                                   user_image='None',street_address='None',city='None',
-                                                   state='None',postal_code='None')
+    )
 
         mail_subject = 'Activation link has been sent to your email id'
         messages = "http://current_site.domain/activate?uid=" + str(
