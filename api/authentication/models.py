@@ -30,7 +30,6 @@ class Education (models.Model):
     to_year = models.IntegerField(4)
     description = models.CharField(max_length=500)
     id = models.AutoField
-
 class Skills(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
@@ -39,7 +38,9 @@ class JobTitle(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
 class RegisterFreelancer(models.Model):
+
     id = models.AutoField
+
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email=models.CharField(max_length=100)
@@ -48,10 +49,6 @@ class RegisterFreelancer(models.Model):
     password=models.CharField(max_length=300)
     job_title=models.ForeignKey(JobTitle,on_delete=models.CASCADE,null=True)
     overview=models.CharField(max_length=500,null=True)
-
-
-
-    hourly_rate=models.DecimalField(decimal_places=2,max_length=10,null=True)
 
     hourly_rate=models.DecimalField(null=True,decimal_places=2,max_digits=10),
 
@@ -75,13 +72,4 @@ class RegisterUser(models.Model):
     is_active=models.BooleanField(default=False)
     image=models.ImageField(upload_to='static_dirs/images/user_image')
 
-    user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True)
-    street_address=models.CharField(max_length=50,null=True)
-    city=models.CharField(max_length=50,null=True)
-    state=models.CharField(max_length=50,null=True)
-    postal_code=models.CharField(max_length=20,null=True)
-    experience=models.ManyToManyField(Experience,null=True)
-    education=models.ManyToManyField(Education,null=True)
-    skills=models.ManyToManyField(Skills,null=True)
-    services=models.ManyToManyField(Services,null=True)
 
