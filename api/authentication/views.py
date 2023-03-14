@@ -31,9 +31,9 @@ def signup_freeLancer(request):
                                                    state='',postal_code='')
 
         mail_subject = 'Activation link has been sent to your email id'
-        messages = "http://current_site.domain/activate?uid=" + str(
+        messages = "http://localhost:3000/addDetails/?uid=" + str(
             urlsafe_base64_encode(force_bytes(register.id))) + "&token=" + account_activation_token.make_token(register)
-
+        print(messages)
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
         send_mail(mail_subject, messages, from_email, to_email)
@@ -78,6 +78,7 @@ def verfy_email_register(request):
     user = RegisterUser.objects.filter(id=uid)
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_activate = True
+
         return Response(user)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)

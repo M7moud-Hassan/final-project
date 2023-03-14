@@ -4,16 +4,13 @@ from .views import *
 from django.contrib import admin
 from django.urls import path
 
-from .views import verfy_email, registerUserSerialzer, signup_freeLancer, resetPasswordView, \
+from .views import  registerUserSerialzer, signup_freeLancer, resetPasswordView, \
     emailResetPassword, addExperinece, addServices, addJobTitle, addSkills
 
 urlpatterns = [
     path('signup_freelancer/',signup_freeLancer,name='signup_freelancer'),
     path('register/',registerUserSerialzer,name='register'),
 
-    path('activate_freelancer/',verfy_email, name='activate'),
-    path('activate/',
-         verfy_email, name='activate'),
     path('reset_password/', resetPasswordView, name='reset_password'),
     path('email_reset_password/', emailResetPassword, name='email_reset_password'),
 
