@@ -320,3 +320,16 @@ def check_email_user(request) :
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def addAdress(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        user.street_address=request.data['street_address']
+        user.city = request.data['city']
+        user.state = request.data['state']
+        user.postal_code = request.data['postal_code']
+        user.save()
+        return JsonResponse({'message': 'Adress added'})
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)

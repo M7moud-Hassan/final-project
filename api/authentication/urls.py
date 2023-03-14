@@ -16,6 +16,7 @@ urlpatterns = [
     path('addService/',addServices,name='addService'),
     path('jobTitle/',addJobTitle,name='jobTitle'),
     path('addSkills/',addSkills,name="addSkills"),
+    path('addAdress/', addAdress, name="addAdress"),
     path('activate/',verfy_email_free, name='activate'),
     path('reset_password/', resetPasswordView, name='reset_password'),
     path('email_reset_password/', emailResetPassword, name='email_reset_password'),
