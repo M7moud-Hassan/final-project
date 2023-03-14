@@ -1,3 +1,6 @@
+from django.shortcuts import redirect
+from django.views.decorators.http import require_http_methods
+
 from .models import RegisterFreelancer, RegisterUser, Experience, Services, Skills
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -31,9 +34,10 @@ def signup_freeLancer(request):
                                                    user_image=None,street_address='',city='',
                                                    state='',postal_code='')
 
+        active_uid = urlsafe_base64_encode(force_bytes(register.id))
+        token=account_activation_token.make_token(register)
         mail_subject = 'Activation link has been sent to your email id'
-        messages = "http://localhost:3000/addDetails/?uid=" + str(
-            urlsafe_base64_encode(force_bytes(register.id))) + "&token=" + account_activation_token.make_token(register)
+        messages = f"http://localhost:8000/auth/activate/?uid={active_uid}&token={token}"
         print(messages)
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
@@ -53,7 +57,7 @@ def registerUserSerialzer(request):
                                             password=hashPassword, phone=user.data['phone'])
 
         mail_subject = 'Activation link has been sent to your email id'
-        messages = "http://current_site.domain/activate?uid=" + str(
+        messages = "http://localhost:8000/activate?uid=" + str(
             urlsafe_base64_encode(force_bytes(input.id))) + "&token=" + Reg_Token.make_token(input)
 
         to_email = [user.data['email']]
@@ -63,15 +67,19 @@ def registerUserSerialzer(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['POST'])
+@require_http_methods(["GET", "POST"])
+
 def verfy_email_free(request):
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    print(uid)
     user = RegisterFreelancer.objects.filter(id=uid).first()
+    print(user)
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_active=True
         user.save()
-        return Response('ok')
-
+        return redirect('https://localhost:8000/auth/addDetails /')
+    else:
+        return Response(status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def verfy_email_register(request):
