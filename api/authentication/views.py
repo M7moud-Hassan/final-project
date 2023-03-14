@@ -27,9 +27,7 @@ def signup_freeLancer(request):
         register=RegisterFreelancer.objects.create(first_name=user.data['first_name'],
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
-                                          is_active=False,job_title=None,overview=None,
-                                                   user_image=None,street_address=None,city=None,
-                                                   state=None,postal_code=None)
+    )
 
         mail_subject = 'Activation link has been sent to your email id'
         messages = "http://current_site.domain/activate?uid=" + str(
@@ -72,6 +70,16 @@ def verfy_email_free(request):
         user.save()
         return Response('ok')
 
+
+@api_view(['POST'])
+def verfy_email_register(request):
+    uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    user = RegisterUser.objects.filter(id=uid)
+    if user is not None and account_activation_token.check_token(user, request.data['token']):
+        user.is_activate = True
+        return Response(user)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -304,7 +312,10 @@ def view_skills_serializer(request):
     if items:
         serializer = SkillsSerializer(items, many=True)
         return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['POST'])
 def check_email_user(request) :
     email = request.data['email']
     user = RegisterUser.objects.filter(email=email).first()
