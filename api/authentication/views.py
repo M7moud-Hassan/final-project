@@ -26,6 +26,7 @@ def signup_freeLancer(request):
         register=RegisterFreelancer.objects.create(first_name=user.data['first_name'],
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
+
                                           is_active=False,job_title=None,overview='',
                                                    user_image=None,street_address='',city='',
                                                    state='',postal_code='')
@@ -72,7 +73,7 @@ def verfy_email_free(request):
         return Response('ok')
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def verfy_email_register(request):
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     user = RegisterUser.objects.filter(id=uid)
