@@ -1,6 +1,3 @@
-from django.shortcuts import redirect
-from django.views.decorators.http import require_http_methods
-
 from .models import RegisterFreelancer, RegisterUser, Experience, Services, Skills
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -29,13 +26,9 @@ def signup_freeLancer(request):
         register=RegisterFreelancer.objects.create(first_name=user.data['first_name'],
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
-
-                                         is_active=False,job_title=None,overview='',
-                                                   user_image=None,street_address='',city='',
-                                                   state='',postal_code='')
+    )
 
         mail_subject = 'Activation link has been sent to your email id'
-
         messages = "http://localhost:3000/activate_free/" + str(
             urlsafe_base64_encode(force_bytes(register.id))) + "/" + account_activation_token.make_token(register)
 
@@ -44,7 +37,6 @@ def signup_freeLancer(request):
         #to_email = [user.data['email']]
         #from_email = settings.EMAIL_HOST_USER
         #send_mail(mail_subject, messages, from_email, to_email)
-
         return Response(user.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -60,7 +52,6 @@ def registerUserSerialzer(request):
                                             password=hashPassword, phone=user.data['phone'])
 
         mail_subject = 'Activation link has been sent to your email id'
-
         messages = "http://localhost:3000/activate_user/" + str(
             urlsafe_base64_encode(force_bytes(input.id))) + "/" + Reg_Token.make_token(input)
 
@@ -73,32 +64,15 @@ def registerUserSerialzer(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@require_http_methods(["GET", "POST"])
-
+@api_view(['POST'])
 def verfy_email_free(request):
     print(request.data)
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
-    print(uid)
     user = RegisterFreelancer.objects.filter(id=uid).first()
-    print(user)
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_active=True
         user.save()
-
-        return Response('ok')
-    else:
-        return Response(status.HTTP_404_NOT_FOUND)
-
-@api_view(['POST'])
-def verify_email_register(request):
-    uid = force_str(urlsafe_base64_decode(request.data['uid']))
-    user = RegisterUser.objects.filter(id=uid)
-    if user is not None and account_activation_token.check_token(user, request.data['token']):
-        user.is_activate = True
-        user.save()
-
         return Response({'res':'ok','id':user.id})
-
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -155,6 +129,8 @@ def reset_password_View(request):
     else:
         return JsonResponse({'error': 'Invalid password reset token.'})
 
+        # return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['POST'])
 def save_education(request):
@@ -209,9 +185,7 @@ def login(request):
 
     user_free=RegisterFreelancer.objects.filter(email=email).first()
     if user_free:
-
         if check_password(password,user_free.password):
-
             if user_free.is_active:
                 if user_free.is_complete_date:
                     return Response({'ress':'ok',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
@@ -233,6 +207,7 @@ def login(request):
                 return Response({"ress": 'password worog'})
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['POST'])
 def addExperinece (request):

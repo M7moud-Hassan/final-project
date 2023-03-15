@@ -47,7 +47,6 @@ class RegisterFreelancer(models.Model):
     password=models.CharField(max_length=300)
     job_title=models.CharField(null=True,max_length=300)
     overview=models.CharField(max_length=500,null=True)
-
     user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True,)
     street_address=models.CharField(max_length=50,null=True,)
     city=models.CharField(max_length=50,null=True,)
@@ -58,7 +57,6 @@ class RegisterFreelancer(models.Model):
     skills=models.ManyToManyField(Skills,null=True,)
     services=models.ManyToManyField(Services,null=True,)
     is_complete_date=models.BooleanField(default=False)
-
 
 class RegisterUser(models.Model):
     id = models.AutoField
