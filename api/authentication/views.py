@@ -30,7 +30,7 @@ def signup_freeLancer(request):
                                          last_name=user.data['last_name'],email=user.data['email'],
                                          password=hashedpassword,phone_number=user.data['phone_number'],
 
-                                          is_active=False,job_title=None,overview='',
+                                         is_active=False,job_title=None,overview='',
                                                    user_image=None,street_address='',city='',
                                                    state='',postal_code='')
 
