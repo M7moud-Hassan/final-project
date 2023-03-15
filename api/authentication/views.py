@@ -34,14 +34,17 @@ def signup_freeLancer(request):
                                                    user_image=None,street_address='',city='',
                                                    state='',postal_code='')
 
-        active_uid = urlsafe_base64_encode(force_bytes(register.id))
-        token=account_activation_token.make_token(register)
         mail_subject = 'Activation link has been sent to your email id'
-        messages = f"http://localhost:3000/auth/activate/{active_uid}/{token}"
+
+        messages = "http://localhost:3000/activate_free/" + str(
+            urlsafe_base64_encode(force_bytes(register.id))) + "/" + account_activation_token.make_token(register)
+
         print(messages)
-        to_email = [user.data['email']]
-        from_email = settings.EMAIL_HOST_USER
-        send_mail(mail_subject, messages, from_email, to_email)
+
+        #to_email = [user.data['email']]
+        #from_email = settings.EMAIL_HOST_USER
+        #send_mail(mail_subject, messages, from_email, to_email)
+
         return Response(user.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -56,15 +59,16 @@ def registerUserSerialzer(request):
                                             email=user.data['email'],
                                             password=hashPassword, phone=user.data['phone'])
 
-        active_uid = urlsafe_base64_encode(force_bytes(input.id))
-        token=account_activation_token.make_token(input)
         mail_subject = 'Activation link has been sent to your email id'
 
-        messages = f"http://localhost:3000/auth/activateuser/{active_uid}/{token}"
+        messages = "http://localhost:3000/activate_user/" + str(
+            urlsafe_base64_encode(force_bytes(input.id))) + "/" + Reg_Token.make_token(input)
 
-        to_email = [user.data['email']]
-        from_email = settings.EMAIL_HOST_USER
-        send_mail(mail_subject, messages, from_email, to_email)
+        print(messages)
+
+       # to_email = [user.data['email']]
+       # from_email = settings.EMAIL_HOST_USER
+        #send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -72,6 +76,7 @@ def registerUserSerialzer(request):
 @require_http_methods(["GET", "POST"])
 
 def verfy_email_free(request):
+    print(request.data)
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     print(uid)
     user = RegisterFreelancer.objects.filter(id=uid).first()
@@ -79,6 +84,7 @@ def verfy_email_free(request):
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_active=True
         user.save()
+
         return Response('ok')
     else:
         return Response(status.HTTP_404_NOT_FOUND)
@@ -90,53 +96,70 @@ def verify_email_register(request):
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_activate = True
         user.save()
-        return Response('ok')
+
+        return Response({'res':'ok','id':user.id})
+
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
+def verfy_email_register(request):
+    uid = force_str(urlsafe_base64_decode(request.data['uid']))
+    user = RegisterUser.objects.filter(id=uid).first()
+    if user is not None and account_activation_token.check_token(user, request.data['token']):
+        user.is_active = True
+        user.save()
+        return Response('ok')
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
 def emailResetPassword(request):
     email = request.data.get('email')
+    type=''
     if not email:
         return Response({'error': 'Email is required.'}, status=400)
 
     user = RegisterFreelancer.objects.filter(email=email).first()
     if not user:
-        return Response({'error': 'User not found.'}, status=404)
-    # if not user.is_active:
-    #     return Response({'error': 'User not activate.'}, status=404)
+        user = RegisterUser.objects.filter(email=email).first()
+        if not user:
+            return Response({'not'})
+        else:
+            type='user'
+    else:
+        type='free'
 
     token = account_activation_token.make_token(user)
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
-    reset_url = f'http://auth/rest_password/{uid}/{token}/'
+    uid = urlsafe_base64_encode(force_bytes(user.id))
+    reset_url = f'http://127.0.0.1:3000/test_token/{uid}/{token}/{type}'
+    print(reset_url)
+    #send_mail(
+    #    'Password Reset',
+    #    f'Click the following link to reset your password: {reset_url}',
+     #   'soonfu0@gmail.com',
+     #   [email],
+     #   fail_silently=False,
+   # )
 
-    send_mail(
-        'Password Reset',
-        f'Click the following link to reset your password: {reset_url}',
-        'soonfu0@gmail.com',
-        [email],
-        fail_silently=False,
-    )
+    return Response('ok', status=200)
 
-    return Response({'message': 'Password reset email sent.'}, status=200)
 @api_view(['POST'])
-def resetPasswordView(request):
+def reset_password_View(request):
+    print(request.data)
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     user = RegisterFreelancer.objects.filter(id=uid).first()
     if user is not None and account_activation_token.check_token(user, request.data['token']):
-
-        return Response('ok')
+        return Response({'id':user.id})
     else:
-
-        return Response({'error': 'Invalid password reset token.'}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'error': 'Invalid password reset token.'})
 
 
 @api_view(['POST'])
 def save_education(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-
         for education_data in data:
             education = Education.objects.create(
                 school=education_data['school'],
@@ -150,6 +173,7 @@ def save_education(request):
             freelancer_register_id = education_data['freelancer_register_id']
             freelancer_register = RegisterFreelancer.objects.filter(id=freelancer_register_id).first()
             freelancer_register.education.add(education)
+        freelancer_register.save()
 
         return JsonResponse({'message': 'Educations saved successfully.'})
 
@@ -160,37 +184,12 @@ def save_education(request):
 def save_overview(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        registerFreelancer = RegisterFreelancer()
-        registerFreelancer.id = data['id']
+        registerFreelancer = RegisterFreelancer.objects.filter(id=data['id']).first()
         registerFreelancer.overview = data['overview']
         registerFreelancer.save()
         return JsonResponse({'id': registerFreelancer.id})
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=405)
-
-@api_view(['POST'])
-def email_rest_password_user(request):
-    email = request.data.get('email')
-    if not email:
-        return Response({'error': 'Email is required.'}, status=400)
-
-    user = RegisterUser.objects.filter(email=email).first()
-    if not user:
-        return Response({'error': 'User not found.'}, status=404)
-
-    token = account_activation_token.make_token(user)
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
-    reset_url = f'http://auth/rest_password_user/{uid}/{token}/'
-
-    send_mail(
-        'Password Reset',
-        f'Click the following link to reset your password: {reset_url}',
-        'soonfu0@gmail.com',
-        [email],
-        fail_silently=False,
-    )
-
-    return Response({'message': 'Password reset email sent.'}, status=200)
 
 
 @api_view(['POST'])
@@ -199,13 +198,12 @@ def rest_password_view_user(request):
     user = RegisterUser.objects.filter(id=uid).first()
     if user is not None and account_activation_token.check_token(user, request.data['token']):
 
-        return Response('ok')
+        return Response({'id':user.id})
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def login(request):
-    print(request.data)
     email= request.data['email']
     password=request.data['password']
 
@@ -215,22 +213,24 @@ def login(request):
         if check_password(password,user_free.password):
 
             if user_free.is_active:
-                return Response({"freeLancer": user_free.id})
+                if user_free.is_complete_date:
+                    return Response({'ress':'ok',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
+                else:
+                    return Response({'ress':'not complete'})
             else:
-                return Response({"freeLancer": 'not active'})
+                return Response({"ress": 'not active',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
         else:
-            return Response({"freeLancer": 'password worng'})
+            return Response({"ress": 'password worng'})
     else:
         user_free=RegisterUser.objects.filter(email=email).first()
-
         if user_free:
             if check_password(password, user_free.password):
                 if user_free.is_active:
-                    return Response({"user": user_free.id})
+                    return Response({'ress':'ok',"id": user_free.id,"name":user_free.fname+' '+user_free.lname})
                 else:
-                    return Response({"freeLancer": 'not active'})
+                    return Response({"ress": 'not active'})
             else:
-                return Response({"freeLancer": 'password worog'})
+                return Response({"ress": 'password worog'})
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -251,6 +251,7 @@ def addExperinece (request):
         relate_id = exp['relate_id']
         freelance = RegisterFreelancer.objects.filter(id=relate_id).first()
         freelance.experience.add(Experts)
+    freelance.save()
 
     return JsonResponse({'message': 'Add Experience data '})
 @api_view(['POST'])
@@ -260,6 +261,7 @@ def addServices(request):
     for service in data:
         serv=Services.objects.filter(id=service).first()
         fetchUser.services.add(serv)
+    fetchUser.save()
 
     return JsonResponse({'message': 'services added '})
 
@@ -270,7 +272,7 @@ def addSkills(request):
     for skill in data:
         skilll=Skills.objects.filter(id=skill).first()
         fetchUser.skills.add(skilll)
-
+    fetchUser.save()
     return JsonResponse({'message': 'Skills added '})
 
 
@@ -278,19 +280,10 @@ def addSkills(request):
 def addJobTitle(request):
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
+
         user.job_title=request.data['jobtitle']
         user.save()
         return JsonResponse({'message': 'Job title added'})
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-@api_view(['POST'])
-def check_email_freelancer(request) :
-    email = request.data.get['email']
-    user = RegisterFreelancer.objects.filter(email=email).first()
-    if user:
-        return Response('ok')
-
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -324,10 +317,50 @@ def view_skills_serializer(request):
         serializer = SkillsSerializer(items, many=True)
         return Response(serializer.data)
 
-def check_email_user(request) :
+
+@api_view(['POST'])
+def check_email(request) :
     email = request.data['email']
-    user = RegisterUser.objects.filter(email=email).first()
+    user = RegisterFreelancer.objects.filter(email=email).first()
     if user:
         return Response('ok')
     else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        user = RegisterUser.objects.filter(email=email).first()
+        if user:
+            return Response('ok')
+        else:
+            return Response('not found')
+
+@api_view(['POST'])
+def add_address(request):
+    id = request.data['id']
+    user = RegisterFreelancer.objects.filter(id=id).first()
+    if user:
+        user.street_address=request.data['street_address']
+        user.city=request.data['city']
+        user.state=request.data['state']
+        user.postal_code=request.data['postal_code']
+        user.is_complete_date=True
+        user.save()
+        return Response('add address')
+    else:
+        return  Response('not found')
+
+@api_view(['POST'])
+def set_password(request):
+    if(request.data['type']=='user'):
+        user=RegisterUser.objects.filter(id=request.data['id']).first()
+        if user:
+            user.password=make_password(request.data['password'])
+            user.save()
+            return Response('ok')
+        else:
+            return  Response('not found')
+    else:
+        user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+        if user:
+            user.password=make_password(request.data['password'])
+            user.save()
+            return Response('ok')
+        else:
+            return  Response('not found')
