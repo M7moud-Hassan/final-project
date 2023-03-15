@@ -37,7 +37,7 @@ def signup_freeLancer(request):
         active_uid = urlsafe_base64_encode(force_bytes(register.id))
         token=account_activation_token.make_token(register)
         mail_subject = 'Activation link has been sent to your email id'
-        messages = f"http://localhost:3000/auth/activate/?uid={active_uid}&token={token}"
+        messages = f"http://localhost:3000/auth/activate/{active_uid}/{token}"
         print(messages)
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
@@ -56,9 +56,11 @@ def registerUserSerialzer(request):
                                             email=user.data['email'],
                                             password=hashPassword, phone=user.data['phone'])
 
+        active_uid = urlsafe_base64_encode(force_bytes(input.id))
+        token=account_activation_token.make_token(input)
         mail_subject = 'Activation link has been sent to your email id'
-        messages = "http://localhost:8000/activate?uid=" + str(
-            urlsafe_base64_encode(force_bytes(input.id))) + "&token=" + Reg_Token.make_token(input)
+
+        messages = f"http://localhost:3000/auth/activateuser/{active_uid}/{token}"
 
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
