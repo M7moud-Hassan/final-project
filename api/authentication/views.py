@@ -37,7 +37,7 @@ def signup_freeLancer(request):
         active_uid = urlsafe_base64_encode(force_bytes(register.id))
         token=account_activation_token.make_token(register)
         mail_subject = 'Activation link has been sent to your email id'
-        messages = f"http://localhost:8000/auth/activate/?uid={active_uid}&token={token}"
+        messages = f"http://localhost:3000/auth/activate/?uid={active_uid}&token={token}"
         print(messages)
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
@@ -77,18 +77,18 @@ def verfy_email_free(request):
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_active=True
         user.save()
-        return redirect('https://localhost:8000/auth/addDetails /')
+        return Response('ok')
     else:
         return Response(status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
-def verfy_email_register(request):
+def verify_email_register(request):
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     user = RegisterUser.objects.filter(id=uid)
     if user is not None and account_activation_token.check_token(user, request.data['token']):
         user.is_activate = True
-
-        return Response(user)
+        user.save()
+        return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
