@@ -1,4 +1,3 @@
-
 from .views import *
 
 from django.contrib import admin
@@ -22,5 +21,5 @@ urlpatterns = [
     path('save_education/', save_education, name='save_education'),
     path('save_overview/', save_overview, name='save_overview'),
     path('login/', login, name='save_overview'),
+    path('homePage/', name='home_page')
  ]
-

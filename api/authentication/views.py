@@ -318,3 +318,17 @@ def check_email_user(request) :
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def check_email(request) :
+    email = request.data['email']
+    user = RegisterFreelancer.objects.filter(email=email).first()
+    if user:
+        return Response('ok')
+    else:
+        user = RegisterUser.objects.filter(email=email).first()
+        if user:
+            return Response('ok')
+        else:
+            return Response('not found')
