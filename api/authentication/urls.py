@@ -16,11 +16,16 @@ urlpatterns = [
     path('addService/',addServices,name='addService'),
     path('jobTitle/',addJobTitle,name='jobTitle'),
     path('addSkills/',addSkills,name="addSkills"),
-    path('activate/',verfy_email_free, name='activate'),
+    path('activate_free/',verfy_email_free, name='activate'),
     path('reset_password/', resetPasswordView, name='reset_password'),
     path('email_reset_password/', emailResetPassword, name='email_reset_password'),
     path('save_education/', save_education, name='save_education'),
     path('save_overview/', save_overview, name='save_overview'),
     path('login/', login, name='save_overview'),
+    path('get_skills/',view_skills_serializer),
+    path('get_Services/', view_service_serializer),
+    path('activate_user_email/',verfy_email_register),
+    path('check_email/',check_email),
+
  ]
 
