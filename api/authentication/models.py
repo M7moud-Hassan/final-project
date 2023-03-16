@@ -72,12 +72,12 @@ class RegisterUser(models.Model):
 class Certifications(models.Model):
     id = models.AutoField
     certifications_freelancer = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
-    provider=models.CharField(max_length=50)
-    description=models.CharField(max_length=500)
-    Issue_date= models.DateField()
-    Expiration_date= models.DateField()
-    Certification_ID=models.CharField(max_length=50)
-    Certification_UR=models.CharField(max_length=100)
+    provider = models.CharField(max_length=50)
+    description = models.CharField(max_length=500)
+    Issue_date = models.DateField()
+    Expiration_date = models.DateField()
+    Certification_ID = models.CharField(max_length=50)
+    Certification_UR = models.CharField(max_length=100)
 
 
 class CertificationType(models.Model):
