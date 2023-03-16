@@ -1,6 +1,6 @@
 from django.db import models
 
-from models import RegisterFreelancer
+from authentication.models import RegisterFreelancer
 
 
 # Create your models here.
