@@ -56,6 +56,7 @@ class RegisterFreelancer(models.Model):
     education=models.ManyToManyField(Education,null=True,)
     skills=models.ManyToManyField(Skills,null=True,)
     services=models.ManyToManyField(Services,null=True,)
+    is_complete_date=models.BooleanField(default=False)
 
 class RegisterUser(models.Model):
     id = models.AutoField
@@ -67,4 +68,24 @@ class RegisterUser(models.Model):
     is_active=models.BooleanField(default=False)
     image=models.ImageField(upload_to='static_dirs/images/user_image')
 
+
+class Work_History(models.Model):
+    id = models.AutoField
+    id = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
+    location = models.CharField(max_length=100)
+    date = models.DateField()
+    cons = models.DecimalField()
+
+class imagesProject(models.Model):
+    id = models.AutoField
+    image = models.ImageField
+
+
+class portflio(models.Model):
+    id = models.AutoField
+    id = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    images = models.ManyToManyField(imagesProject)
+    linkVide = models.URLField()
+    description = models.CharField(max_length=500)
 
