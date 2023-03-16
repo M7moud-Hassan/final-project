@@ -2,7 +2,6 @@ from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
 from .models import *
 from .serlializers import *
 
@@ -59,17 +58,7 @@ def get_Portfilo_using_id_serializer(request):
 
 @api_view(['POST'])
 def add_portflio(request):
-    item = Portflio(data=request.data)
 
-    # validating for already existing data
-    if Portflio.objects.filter(**request.data).exists():
-        raise serializers.ValidationError('This data already exists')
-
-    if item.is_valid():
-        item.save()
-        return Response(item.data)
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 

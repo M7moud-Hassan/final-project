@@ -1,7 +1,12 @@
 from rest_framework import serializers
 
-from .models import Certification, CertificationType, Portflio
+from .models import *
 
+class ImagesProjectSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
+    class Meta:
+        model=ImagesProject
+        fields = ['image']
 
 class CertificationsSerialzer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +19,7 @@ class CertificationtypeSerialzer(serializers.ModelSerializer):
         fields = '__all__'
 
 class portfiloSerialzer(serializers.ModelSerializer):
+    images = ImagesProjectSerializer(many=True,read_only=True)
     class Meta:
         model = Portflio
-        fields = '__all__'
+        fields = ['title','portflio_freelancer','linkVide','description','images']
