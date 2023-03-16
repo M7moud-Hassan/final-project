@@ -69,3 +69,5 @@ class RegisterUser(models.Model):
     image=models.ImageField(upload_to='static_dirs/images/user_image')
 
 
+
+

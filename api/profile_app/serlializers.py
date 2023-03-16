@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Certification, CertificationType, portflio
+from .models import Certification, CertificationType, Portflio
 
 
 class CertificationsSerialzer(serializers.ModelSerializer):
@@ -15,5 +15,5 @@ class CertificationtypeSerialzer(serializers.ModelSerializer):
 
 class portfiloSerialzer(serializers.ModelSerializer):
     class Meta:
-        model = portflio
+        model = Portflio
         fields = '__all__'
