@@ -37,14 +37,14 @@ def get_all_certificatins_serializer(request):
     # if there is something in items else raise error
     if items:
         serializer = CertificationsSerialzer(items, many=True)
-     #   return Response(serializer.data)
+        return Response(serializer.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_Portfilo_using_id_serializer(request):
     items = Portflio.objects.all(id_user_free=request.data['id'])
 
