@@ -34,8 +34,8 @@ def signup_freeLancer(request):
 
         print(messages)
 
-        #to_email = [user.data['email']]
-        #from_email = settings.EMAIL_HOST_USER
+        to_email = [user.data['email']]
+        from_email = settings.EMAIL_HOST_USER
         #send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
@@ -47,7 +47,7 @@ def registerUserSerialzer(request):
     user = SignUpUserSerialzer(data=request.data)
     if user.is_valid():
         hashPassword = make_password(user.data['password'])
-        input = RegisterUser.objects.create(fname=user.data['fname'], lname=user.data['lname'],
+        register = RegisterUser.objects.create(fname=user.data['fname'], lname=user.data['lname'],
                                             email=user.data['email'],
                                             password=hashPassword, phone=user.data['phone'])
 
@@ -57,8 +57,9 @@ def registerUserSerialzer(request):
 
         print(messages)
 
-       # to_email = [user.data['email']]
-       # from_email = settings.EMAIL_HOST_USER
+        print(register.email)
+        to_email = [register.email]
+        from_email = settings.EMAIL_HOST_USER
         #send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
