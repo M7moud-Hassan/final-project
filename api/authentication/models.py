@@ -57,6 +57,8 @@ class RegisterFreelancer(models.Model):
     skills=models.ManyToManyField(Skills,null=True,)
     services=models.ManyToManyField(Services,null=True,)
     is_complete_date=models.BooleanField(default=False)
+    def __str__(self):
+        return  f'{self.first_name} {self.last_name}'
 
 class RegisterUser(models.Model):
     id = models.AutoField

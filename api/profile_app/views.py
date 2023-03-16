@@ -41,7 +41,57 @@ def get_all_certificatins_serializer(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+def details_freelancer(request):
+    id=request.data['id']
+    user=RegisterFreelancer.objects.fliter(id=id).first()
+    if user:
+        title = models.CharField(max_length=50)
+        company = models.CharField(max_length=100)
+        location = models.CharField(max_length=200)
+        is_current_work_in_company = models.BooleanField(default=False)
+        start_date = models.DateField()
+        end_date = models.DateField()
+        description = models.CharField(max_length=500)
+        id = models.AutoField
+        return  Response({
+            "name":"mahmoud hassan",
+            "address":"sohage",
+            "jobtitle":"software ",
+            "overView":"dkdhdhhdhddhhd",
+            "educations":[
+                {
+                    "school":"school",
+                    "from_year":"to_year"
+                },
+                {
+                    "school": "school",
+                    "from_year": "to_year"
+                },
 
+            ]
+            ,
+            "skills":[
+                "sksjjs",
+                "sjsjjsj",
+                "sjksjjsjs"
+            ],
+            "experiecnces":[
+                {
+                    "title":"title",
+                    "company":"djhdjjhd",
+                    "description":"djdhdjhjdjdjd",
+                },
+                {
+                    "title": "title",
+                    "company": "djhdjjhd",
+                    "description": "djdhdjhjdjdjd",
+                }
+            ]
+
+        })
+    else:
+        return Response('not found')
 
 
 @api_view(['GET'])
