@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'authentication',
+    'profile_app',
     'corsheaders', 
     'rest_framework',
 
@@ -88,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'api',
         'USER':'postgres',
-        'PASSWORD':'mahm01142',
+        'PASSWORD':'12',
         'HOST':'127.0.0.1',
         'PORT':5432
     }
