@@ -69,3 +69,46 @@ class RegisterUser(models.Model):
     image=models.ImageField(upload_to='static_dirs/images/user_image')
 
 
+class Certifications(models.Model):
+    id = models.AutoField
+    certifications_freelancer = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
+    provider=models.CharField(max_length=50)
+    description=models.CharField(max_length=500)
+    Issue_date= models.DateField()
+    Expiration_date= models.DateField()
+    Certification_ID=models.CharField(max_length=50)
+    Certification_UR=models.CharField(max_length=100)
+
+
+class CertificationType(models.Model):
+    id = models.AutoField
+    name=models.CharField(max_length=50)
+
+
+class WorkHistory(models.Model):
+    id = models.AutoField
+    work_history_freelancer = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
+    location=models.CharField(max_length=100)
+    date= models.DateField()
+    const=models.DecimalField(decimal_places=10,max_digits=12)
+
+
+class ImagesProject(models.Model):
+    id = models.AutoField
+    image_project = models.ImageField(upload_to='static_dirs/images/project_image')
+
+class Portfilo(models.Model):
+    id = models.AutoField
+    portfilo_freelancer = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
+    title=models.CharField(max_length=100)
+    images = models.ManyToManyField(ImagesProject,null=True,)
+    linkVide= models.URLField(max_length=200)
+    description=models.CharField(max_length=50)
+
+
+
+
+
+
+
+
