@@ -171,6 +171,7 @@ def save_overview(request):
 
 @api_view(['POST'])
 def rest_password_view_user(request):
+    print(request.data)
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     user = RegisterUser.objects.filter(id=uid).first()
     if user is not None and account_activation_token.check_token(user, request.data['token']):
@@ -316,7 +317,7 @@ def add_address(request):
         user.city=request.data['city']
         user.state=request.data['state']
         user.postal_code=request.data['postal_code']
-        user.is_complete_date=True
+        user.is_complete_date =True
         user.save()
         return Response('add address')
     else:
