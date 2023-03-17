@@ -15,14 +15,14 @@ class WorkHistory(models.Model):
 
 class ImagesProject(models.Model):
     id = models.AutoField
-    image = models.ImageField(upload_to='static_dirs/images/project_image',null=True)
+    image = models.ImageField(upload_to='images/Portflio_images/',null=True)
 
 
 class Portflio(models.Model):
     id = models.AutoField
     portflio_freelancer = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    images = models.ManyToManyField(ImagesProject, null=True)
+    images = models.ManyToManyField(ImagesProject)
     linkVide = models.URLField(null=True)
     description = models.CharField(max_length=500)
 
@@ -41,3 +41,4 @@ class Certification(models.Model):
     expiration_date = models.DateField(null=True)
     certification_ID = models.CharField(max_length=50)
     certification_UR = models.CharField(max_length=100)
+    certification_type=models.ForeignKey(CertificationType, on_delete=models.CASCADE)
