@@ -47,7 +47,7 @@ class RegisterFreelancer(models.Model):
     password=models.CharField(max_length=300)
     job_title=models.CharField(null=True,max_length=300)
     overview=models.CharField(max_length=500,null=True)
-    user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True,)
+    user_image=models.ImageField(upload_to='images/freelancer/profile/',null=True,)
     street_address=models.CharField(max_length=50,null=True,)
     city=models.CharField(max_length=50,null=True,)
     state=models.CharField(max_length=50,null=True,)

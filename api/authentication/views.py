@@ -192,7 +192,7 @@ def login(request):
                 if user_free.is_complete_date:
                     return Response({'ress':'ok',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
                 else:
-                    return Response({'ress':'not complete'})
+                    return Response({'ress':'not complete',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
             else:
                 return Response({"ress": 'not active',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
         else:
@@ -310,6 +310,7 @@ def check_email(request) :
 
 @api_view(['POST'])
 def add_address(request):
+    print(request.data)
     id = request.data['id']
     user = RegisterFreelancer.objects.filter(id=id).first()
     if user:
@@ -317,7 +318,15 @@ def add_address(request):
         user.city=request.data['city']
         user.state=request.data['state']
         user.postal_code=request.data['postal_code']
-        user.is_complete_date =True
+        user.user_image=request.data['image']
+        user.is_complete_date = True
+        user.save()
+        user.street_address = request.data['street_address']
+        user.city = request.data['city']
+        user.state = request.data['state']
+        user.postal_code = request.data['postal_code']
+        user.user_image = request.data['image']
+        user.is_complete_date = True
         user.save()
         return Response('add address')
     else:
