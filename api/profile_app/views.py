@@ -1,3 +1,5 @@
+import base64
+
 from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -41,53 +43,45 @@ def get_all_certificatins_serializer(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def details_freelancer(request):
     id=request.data['id']
-    user=RegisterFreelancer.objects.fliter(id=id).first()
+    user=RegisterFreelancer.objects.filter(id=id).first()
     if user:
-        title = models.CharField(max_length=50)
-        company = models.CharField(max_length=100)
-        location = models.CharField(max_length=200)
-        is_current_work_in_company = models.BooleanField(default=False)
-        start_date = models.DateField()
-        end_date = models.DateField()
-        description = models.CharField(max_length=500)
-        id = models.AutoField
+        image_data = base64.b64encode(user.user_image.read()).decode('utf-8')
+        educations=user.education.all()
+        list_ed=[]
+        for ed in educations:
+            list_ed.append({
+                 "school":ed.school,
+                "from_year":ed.from_year
+            })
+        list_exp=[]
+        experiences=user.experience.all()
+        for exp in experiences:
+            list_exp.append({
+                "title": exp.title,
+                "company": exp.company,
+                "description": exp.description
+            })
+        skills=user.skills.all()
+        myskills=[]
+        for sk in skills:
+            myskills.append(sk.name)
+        myServeces=[]
+        services=user.services.all()
+        for se in services:
+            myServeces.append(se.name)
         return  Response({
-            "name":"mahmoud hassan",
-            "address":"sohage",
-            "jobtitle":"software ",
-            "overView":"dkdhdhhdhddhhd",
-            "educations":[
-                {
-                    "school":"school",
-                    "from_year":"to_year"
-                },
-                {
-                    "school": "school",
-                    "from_year": "to_year"
-                },
-
-            ]
-            ,
-            "skills":[
-                "sksjjs",
-                "sjsjjsj",
-                "sjksjjsjs"
-            ],
-            "experiecnces":[
-                {
-                    "title":"title",
-                    "company":"djhdjjhd",
-                    "description":"djdhdjhjdjdjd",
-                },
-                {
-                    "title": "title",
-                    "company": "djhdjjhd",
-                    "description": "djdhdjhjdjdjd",
-                }
-            ]
+            "name":f'{user.first_name} {user.last_name}',
+            "address":user.city,
+            "jobtitle": user.job_title,
+            "overView":user.overview,
+            "image":image_data,
+            "educations":list_ed,
+            "skills":myskills,
+            "experiecnces":list_exp,
+            "services":myServeces
 
         })
     else:
