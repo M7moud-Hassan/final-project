@@ -34,8 +34,8 @@ def signup_freeLancer(request):
 
         print(messages)
 
-        #to_email = [user.data['email']]
-        #from_email = settings.EMAIL_HOST_USER
+        to_email = [user.data['email']]
+        from_email = settings.EMAIL_HOST_USER
         #send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
@@ -47,7 +47,7 @@ def registerUserSerialzer(request):
     user = SignUpUserSerialzer(data=request.data)
     if user.is_valid():
         hashPassword = make_password(user.data['password'])
-        input = RegisterUser.objects.create(fname=user.data['fname'], lname=user.data['lname'],
+        register = RegisterUser.objects.create(fname=user.data['fname'], lname=user.data['lname'],
                                             email=user.data['email'],
                                             password=hashPassword, phone=user.data['phone'])
 
@@ -57,8 +57,9 @@ def registerUserSerialzer(request):
 
         print(messages)
 
-       # to_email = [user.data['email']]
-       # from_email = settings.EMAIL_HOST_USER
+        print(register.email)
+        to_email = [register.email]
+        from_email = settings.EMAIL_HOST_USER
         #send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
@@ -170,6 +171,7 @@ def save_overview(request):
 
 @api_view(['POST'])
 def rest_password_view_user(request):
+    print(request.data)
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     user = RegisterUser.objects.filter(id=uid).first()
     if user is not None and account_activation_token.check_token(user, request.data['token']):
@@ -190,7 +192,7 @@ def login(request):
                 if user_free.is_complete_date:
                     return Response({'ress':'ok',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
                 else:
-                    return Response({'ress':'not complete'})
+                    return Response({'ress':'not complete',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
             else:
                 return Response({"ress": 'not active',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
         else:
@@ -308,6 +310,7 @@ def check_email(request) :
 
 @api_view(['POST'])
 def add_address(request):
+    print(request.data)
     id = request.data['id']
     user = RegisterFreelancer.objects.filter(id=id).first()
     if user:
@@ -315,7 +318,15 @@ def add_address(request):
         user.city=request.data['city']
         user.state=request.data['state']
         user.postal_code=request.data['postal_code']
-        user.is_complete_date=True
+        user.user_image=request.data['image']
+        user.is_complete_date = True
+        user.save()
+        user.street_address = request.data['street_address']
+        user.city = request.data['city']
+        user.state = request.data['state']
+        user.postal_code = request.data['postal_code']
+        user.user_image = request.data['image']
+        user.is_complete_date = True
         user.save()
         return Response('add address')
     else:
