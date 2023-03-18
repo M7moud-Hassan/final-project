@@ -131,3 +131,5 @@ def add_certification (request):
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
