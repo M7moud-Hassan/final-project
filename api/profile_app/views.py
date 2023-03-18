@@ -6,7 +6,9 @@ from rest_framework.response import Response
 
 from .models import *
 from .serlializers import *
+from authentication.models import RegisterFreelancer
 
+from authentication.models import RegisterUser
 
 
 # Create your views here.@api_view(['GET'])
@@ -168,7 +170,7 @@ def add_history_work(request):
 def add_history_employment(request):
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
-        EmploymentHistory.objects.create(company=request.data['company'],
+        Employment_History.objects.create(company=request.data['company'],
                                          location=request.data['location'],
                                          title=request.data['title'],
                                          period_from_month=request.data['period_from_month'],
@@ -178,3 +180,22 @@ def add_history_employment(request):
         return Response('ok')
     else:
         Response('not fount free')
+def clientDetails(request):
+    id=request.data['id']
+    user=RegisterUser.objects.filter(id=id).first()
+    if user:
+        fname = user.fname
+        lname = user.lname
+        phone = user.phone
+        email = user.email
+        image = ''
+        if user.image:
+            image = base64.b64encode(user.image.read()).decode('utf-8')
+        return  Response({
+            "name":f'{fname} {lname}',
+            "phone":phone,
+            "email": email,
+            "image":image
+        })
+    else:
+        return Response('not found')
