@@ -15,7 +15,7 @@ class WorkHistory(models.Model):
 
 class ImagesProject(models.Model):
     id = models.AutoField
-    image = models.ImageField(upload_to='media/images/project_image', blank=True, null=True)
+    image = models.ImageField(upload_to='images/Portflio_images/',null=True)
 
 
 class Portflio(models.Model):
@@ -41,3 +41,4 @@ class Certification(models.Model):
     expiration_date = models.DateField(null=True)
     certification_ID = models.CharField(max_length=50)
     certification_UR = models.CharField(max_length=100)
+    certification_type=models.ForeignKey(CertificationType, on_delete=models.CASCADE)
