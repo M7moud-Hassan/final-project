@@ -11,7 +11,6 @@ urlpatterns = [
     path('register/',registerUserSerialzer,name='register'),
     path('rest_password_check/', reset_password_View),
     path('rest_password_view_user/', rest_password_view_user, name='reset_password_free'),
-
     path('addExperience/',addExperinece, name='addExperinece'),
     path('addService/',addServices,name='addService'),
     path('jobTitle/',addJobTitle,name='jobTitle'),
