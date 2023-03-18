@@ -23,3 +23,13 @@ class portfiloSerialzer(serializers.ModelSerializer):
     class Meta:
         model = Portflio
         fields = ['title','portflio_freelancer','linkVide','description','images']
+
+
+class History_workSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkHistory
+        fields = '__all__'
+class EmploymentHistorySerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = EmploymentHistory
+        fields = '__all__'

@@ -70,6 +70,9 @@ def details_freelancer(request):
         services=user.services.all()
         for se in services:
             myServeces.append(se.name)
+
+        history_work=WorkHistory.objects.filter(work_history_freelancer=user)
+
         return  Response({
             "name":f'{user.first_name} {user.last_name}',
             "address":user.city,
@@ -79,8 +82,8 @@ def details_freelancer(request):
             "educations":list_ed,
             "skills":myskills,
             "experiecnces":list_exp,
-            "services":myServeces
-
+            "services":myServeces,
+            "history_work":History_workSerialzer(history_work,many=True)
         })
     else:
         return Response('not found')

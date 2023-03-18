@@ -172,7 +172,6 @@ def save_overview(request):
 
 @api_view(['POST'])
 def rest_password_view_user(request):
-    print(request.data)
     uid = force_str(urlsafe_base64_decode(request.data['uid']))
     user = RegisterUser.objects.filter(id=uid).first()
     if user is not None and account_activation_token.check_token(user, request.data['token']):
