@@ -31,5 +31,17 @@ class History_workSerialzer(serializers.ModelSerializer):
         fields = '__all__'
 class EmploymentHistorySerialzer(serializers.ModelSerializer):
     class Meta:
-        model = EmploymentHistory
+        model = Employment_History
+        fields = '__all__'
+
+
+class CertificationsTypeSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = CertificationType
+        fields = ['name']
+
+class CertificationsSerialzer(serializers.ModelSerializer):
+    certification_type = CertificationsTypeSerialzer()
+    class Meta:
+        model = Certification
         fields = '__all__'
