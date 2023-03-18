@@ -68,7 +68,7 @@ class RegisterUser(models.Model):
     email=models.EmailField(max_length=70)
     password=models.CharField(max_length=100)
     is_active=models.BooleanField(default=False)
-    image=models.ImageField(upload_to='media/images/freelancer_profile/')
+    image=models.ImageField(upload_to='images/user_profile/')
 
 
 
