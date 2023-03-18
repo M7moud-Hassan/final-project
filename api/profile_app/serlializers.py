@@ -16,4 +16,4 @@ class CertificationtypeSerialzer(serializers.ModelSerializer):
 class portfiloSerialzer(serializers.ModelSerializer):
     class Meta:
         model = Portflio
-        fields = '__all__'
+        fields = ('portflio_freelancer','title','description','linkVide')
