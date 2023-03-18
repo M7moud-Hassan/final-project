@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from .models import *
 from .serlializers import *
-
+from ..authentication.models import RegisterFreelancer
 
 
 # Create your views here.@api_view(['GET'])
@@ -131,3 +131,10 @@ def add_certification (request):
         return Response('ok')
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def clientDetails(request):
+    id=request.data['id']
+    user=RegisterFreelancer.objects.filter(id=id).first()
+

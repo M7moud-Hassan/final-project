@@ -2,7 +2,7 @@ from django.db import models
 
 from authentication.models import RegisterFreelancer
 
-
+from authentication.models import RegisterUser
 # Create your models here.
 
 
