@@ -22,7 +22,7 @@ class Portflio(models.Model):
     id = models.AutoField
     portflio_freelancer = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    images = models.ManyToManyField(ImagesProject)
+    images = models.ManyToManyField(ImagesProject, null=True,blank=True)
     linkVide = models.URLField(null=True)
     description = models.CharField(max_length=500)
 

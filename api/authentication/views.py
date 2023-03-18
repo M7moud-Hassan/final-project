@@ -162,6 +162,7 @@ def save_overview(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         registerFreelancer = RegisterFreelancer.objects.filter(id=data['id']).first()
+        registerFreelancer.job_title = registerFreelancer.job_title
         registerFreelancer.overview = data['overview']
         registerFreelancer.save()
         return JsonResponse({'id': registerFreelancer.id})
@@ -257,7 +258,6 @@ def addSkills(request):
 def addJobTitle(request):
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
-
         user.job_title=request.data['jobtitle']
         user.save()
         return JsonResponse({'message': 'Job title added'})
@@ -314,6 +314,7 @@ def add_address(request):
     id = request.data['id']
     user = RegisterFreelancer.objects.filter(id=id).first()
     if user:
+        user.overview=user.overview
         user.street_address=request.data['street_address']
         user.city=request.data['city']
         user.state=request.data['state']
@@ -321,6 +322,7 @@ def add_address(request):
         user.user_image=request.data['image']
         user.is_complete_date = True
         user.save()
+        user.overview = user.overview
         user.street_address = request.data['street_address']
         user.city = request.data['city']
         user.state = request.data['state']
