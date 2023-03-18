@@ -43,16 +43,3 @@ class Certification(models.Model):
     certification_ID = models.CharField(max_length=50)
     certification_UR = models.CharField(max_length=100)
     certification_type = models.ForeignKey(CertificationType, on_delete=models.CASCADE)
-
-
-class EmploymentHistory(models.Model):
-    id = models.AutoField
-    id_free = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
-    company = models.CharField(max_length=50)
-    location = models.CharField(max_length=50)
-    title = models.CharField(max_length=200)
-    period_from_month = models.CharField(max_length=50)
-    period_from_month = models.CharField(max_length=50)
-    period_to_month = models.CharField(max_length=50, null=True)
-    is_current_work = models.BooleanField(default=False)
-    description = models.CharField(max_length=500, null=True)
