@@ -72,6 +72,18 @@ def details_freelancer(request):
             myServeces.append(se.name)
 
         history_work=WorkHistory.objects.filter(work_history_freelancer=user)
+        portfilos_list=[]
+        portfilos=Portflio.objects.filter(portflio_freelancer=user)
+        for p in portfilos:
+            portfilos_list.append({
+                "id":p.id,
+                "title":p.title,
+                "linkvideo":p.linkVide,
+                "description":p.description,
+                "image":base64.b64encode(p.images.first().image.read()).decode('utf-8')
+            })
+        certification = Certification.objects.filter(certification_user_freelancer=user)
+        employmentHistorys=Employment_History.objects.filter(id_free=user)
 
         return  Response({
             "name":f'{user.first_name} {user.last_name}',
@@ -83,7 +95,10 @@ def details_freelancer(request):
             "skills":myskills,
             "experiecnces":list_exp,
             "services":myServeces,
-            "history_work":History_workSerialzer(history_work,many=True)
+            "history_work":History_workSerialzer(history_work,many=True).data,
+            "portfilos":portfilos_list if portfilos_list else [],
+            "certifications":CertificationsSerialzer(certification,many=True).data,
+            "empolumentHistory":EmploymentHistorySerialzer(employmentHistorys,many=True).data
         })
     else:
         return Response('not found')
