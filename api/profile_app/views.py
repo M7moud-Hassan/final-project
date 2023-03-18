@@ -70,6 +70,9 @@ def details_freelancer(request):
         services=user.services.all()
         for se in services:
             myServeces.append(se.name)
+
+        history_work=WorkHistory.objects.filter(work_history_freelancer=user)
+
         return  Response({
             "name":f'{user.first_name} {user.last_name}',
             "address":user.city,
@@ -79,11 +82,12 @@ def details_freelancer(request):
             "educations":list_ed,
             "skills":myskills,
             "experiecnces":list_exp,
-            "services":myServeces
-
+            "services":myServeces,
+            "history_work":History_workSerialzer(history_work,many=True)
         })
     else:
         return Response('not found')
+
 
 
 @api_view(['POST'])
@@ -133,3 +137,29 @@ def add_certification (request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['POST'])
+def add_history_work(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        WorkHistory.objects.create(work_history_freelancer=user,
+                                   location=request.data['location'],
+                                   date=request.data['date'],
+                                   cost=request.data['cost'])
+        return Response('ok')
+    else:
+        Response('not fount free')
+
+@api_view(['POST'])
+def add_history_employment(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        EmploymentHistory.objects.create(company=request.data['company'],
+                                         location=request.data['location'],
+                                         title=request.data['title'],
+                                         period_from_month=request.data['period_from_month'],
+                                         period_to_month=request.data['period_to_month'],
+                                         is_current_work=request.data['is_current_work'],
+                                         description=request.data['description'])
+        return Response('ok')
+    else:
+        Response('not fount free')
