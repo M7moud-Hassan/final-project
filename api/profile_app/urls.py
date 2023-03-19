@@ -9,5 +9,5 @@ urlpatterns = [
     path('add_certification/', add_certification, name='add_certification'),
     path('get_all_certificatins/', get_all_certificatins_serializer, name='get_all_certificatins_serializer'),
     path("get_details_free/",details_freelancer),
-    path('clientDetails',clientDetails,name='clientDetails')
+    path('clientDetails/',clientDetails,name='clientDetails')
 ]
