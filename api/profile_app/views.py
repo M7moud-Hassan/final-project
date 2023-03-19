@@ -197,7 +197,24 @@ def clientDetails(request):
             "name":f'{fname} {lname}',
             "phone":phone,
             "email": email,
-            "image":image
+            "image":image,
+            "fname":fname,
+            "lname":lname
         })
     else:
         return Response('not found')
+
+@api_view(['POST'])
+def secondaryDetails(request):
+    id=request.data['id']
+    user=RegisterUser.objects.filter(id=id).first()
+    if user:
+        user.street=request.data['street']
+        user.city=request.data['city']
+        user.state=request.data['state']
+        user.postal_code=request.data['postal_code']
+        user.phone=request.data['phone']
+        user.save()
+        return  Response('ok')
+    else:
+        return Response('not added')

@@ -6,6 +6,7 @@ from django.urls import path
 
 from .views import  *
 
+
 urlpatterns = [
     path('signup_freelancer/',signup_freeLancer,name='signup_freelancer'),
     path('register/',registerUserSerialzer,name='register'),
@@ -26,5 +27,6 @@ urlpatterns = [
     path('get_Services/', view_service_serializer),
     path('activate_user_email/',verfy_email_register),
     path('check_email/',check_email),
+
  ]
 

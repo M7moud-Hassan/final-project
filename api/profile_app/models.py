@@ -55,4 +55,15 @@ class Certification(models.Model):
     certification_UR = models.CharField(max_length=100)
     certification_type = models.ForeignKey(CertificationType, on_delete=models.CASCADE)
 
-
+class PaymentMethod(models.Model):
+    id = models.AutoField
+    nameOnTheCard = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+    city =models.CharField(max_length=30)
+    state = models.CharField(max_length=30)
+    Zip_code = models.CharField(max_length=30)
+    Expire_year = models.IntegerField(4)
+    Expire_month = models.IntegerField(max_length=2)
+    Credit_number = models.IntegerField(16)
+    CVV = models.IntegerField(3)
+    client_id = models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
