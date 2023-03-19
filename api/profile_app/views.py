@@ -4,14 +4,14 @@ from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
 from .models import *
 from .serlializers import *
+from authentication.models import RegisterFreelancer
+
+from authentication.models import RegisterUser
 
 
-
-# Create your views here.
-@api_view(['GET'])
+# Create your views here.@api_view(['GET'])
 def get_all_certification_type_serializer(request):
     # checking for the parameters from the URL
     if request.query_params:
@@ -72,6 +72,21 @@ def details_freelancer(request):
         services=user.services.all()
         for se in services:
             myServeces.append(se.name)
+
+        history_work=WorkHistory.objects.filter(work_history_freelancer=user)
+        portfilos_list=[]
+        portfilos=Portflio.objects.filter(portflio_freelancer=user)
+        for p in portfilos:
+            portfilos_list.append({
+                "id":p.id,
+                "title":p.title,
+                "linkvideo":p.linkVide,
+                "description":p.description,
+                "image":base64.b64encode(p.images.first().image.read()).decode('utf-8')
+            })
+        certification = Certification.objects.filter(certification_user_freelancer=user)
+        employmentHistorys=Employment_History.objects.filter(id_free=user)
+
         return  Response({
             "name":f'{user.first_name} {user.last_name}',
             "address":user.city,
@@ -81,11 +96,15 @@ def details_freelancer(request):
             "educations":list_ed,
             "skills":myskills,
             "experiecnces":list_exp,
-            "services":myServeces
-
+            "services":myServeces,
+            "history_work":History_workSerialzer(history_work,many=True).data,
+            "portfilos":portfilos_list if portfilos_list else [],
+            "certifications":CertificationsSerialzer(certification,many=True).data,
+            "empolumentHistory":EmploymentHistorySerialzer(employmentHistorys,many=True).data
         })
     else:
         return Response('not found')
+
 
 
 @api_view(['POST'])
@@ -117,9 +136,6 @@ def add_portflio(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-
-
-
 @api_view(['POST'])
 def add_certification (request):
     user = RegisterFreelancer.objects.filter(id=request.data['id']).first()
@@ -140,6 +156,7 @@ def add_certification (request):
 
 
 @api_view(['POST'])
+
 def add_payment (request):
     user = RegisterFreelancer.objects.filter(id=request.data['id']).first()
 
@@ -163,28 +180,6 @@ def add_payment (request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-def add_payment_two (request):
-    user = RegisterFreelancer.objects.filter(id=request.data['id']).first()
-
-    if user:
-        payment_serialzer = PaymentSerialzer.objects.create(
-                                  payment_freelancer=user,
-                                  full_name=request.data['full_name'],
-                                  street_address=request.data['street_address'],
-                                  city=request.data['city'],
-                                  state=request.data['state'],
-                                  postal_code=request.data['postal_code'],
-                                  name_on_card=request.data['name_on_card'],
-                                  credit_card_number=request.data['credit_card_number'],
-                                  exp_month=request.data['exp_month'],
-                                  exp_year=request.data['exp_year'],
-                                  cvv=request.data['cvv'],
-                                                      )
-        payment_serialzer.save()
-        return Response('ok')
-    else:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(['POST'])
 def get_payment_using_id_serializer(request):
@@ -194,3 +189,49 @@ def get_payment_using_id_serializer(request):
         return Response(serializer.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+def add_history_work(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        WorkHistory.objects.create(work_history_freelancer=user,
+                                   location=request.data['location'],
+                                   date=request.data['date'],
+                                   cost=request.data['cost'])
+        return Response('ok')
+    else:
+        Response('not fount free')
+
+@api_view(['POST'])
+def add_history_employment(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        Employment_History.objects.create(company=request.data['company'],
+                                         location=request.data['location'],
+                                         title=request.data['title'],
+                                         period_from_month=request.data['period_from_month'],
+                                         period_to_month=request.data['period_to_month'],
+                                         is_current_work=request.data['is_current_work'],
+                                         description=request.data['description'])
+        return Response('ok')
+    else:
+        Response('not fount free')
+def clientDetails(request):
+    id=request.data['id']
+    user=RegisterUser.objects.filter(id=id).first()
+    if user:
+        fname = user.fname
+        lname = user.lname
+        phone = user.phone
+        email = user.email
+        image = ''
+        if user.image:
+            image = base64.b64encode(user.image.read()).decode('utf-8')
+        return  Response({
+            "name":f'{fname} {lname}',
+            "phone":phone,
+            "email": email,
+            "image":image
+        })
+    else:
+        return Response('not found')
+

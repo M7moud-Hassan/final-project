@@ -11,5 +11,6 @@ urlpatterns = [
     path("get_details_free/",details_freelancer),
     path('get_payment_using_id/', get_payment_using_id_serializer, name='get_payment_using_id_serializer'),
     path("add_payment/", add_payment, name='add_payment'),
+    path('clientDetails',clientDetails,name='clientDetails')
 
 ]

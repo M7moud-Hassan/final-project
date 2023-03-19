@@ -6,3 +6,5 @@ admin.site.register(CertificationType)
 admin.site.register(ImagesProject)
 admin.site.register(WorkHistory)
 admin.site.register(Payment)
+admin.site.register(Employment_History)
+
