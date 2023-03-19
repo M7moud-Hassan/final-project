@@ -70,3 +70,9 @@ class Payment(models.Model):
     exp_year = models.DateField()
     cvv = models.IntegerField(max_length=5)
 
+class WorkHistoryUser(models.Model):
+    id = models.AutoField
+    work_history_user = models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
+    location = models.CharField(max_length=100)
+    date = models.DateField()
+    cost = models.DecimalField(decimal_places=5, max_digits=10)

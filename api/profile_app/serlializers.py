@@ -65,3 +65,15 @@ class CertificationsSerialzer(serializers.ModelSerializer):
         model = Certification
         fields = '__all__'
 
+
+
+class WorkHistoryUserSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkHistoryUser
+        fields = ['id',
+                  'work_history_user',
+                  'location',
+                  'date',
+                  'cost',
+                  ]
+

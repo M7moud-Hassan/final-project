@@ -7,4 +7,4 @@ admin.site.register(ImagesProject)
 admin.site.register(WorkHistory)
 admin.site.register(Payment)
 admin.site.register(Employment_History)
-
+admin.site.register(WorkHistoryUser)

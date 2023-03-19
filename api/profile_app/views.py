@@ -215,6 +215,8 @@ def add_history_employment(request):
         return Response('ok')
     else:
         Response('not fount free')
+
+@api_view(['POST'])
 def clientDetails(request):
     id=request.data['id']
     user=RegisterUser.objects.filter(id=id).first()
@@ -235,3 +237,30 @@ def clientDetails(request):
     else:
         return Response('not found')
 
+
+
+@api_view(['POST'])
+def add_work_history_user (request):
+    user = RegisterUser.objects.filter(id=request.data['work_history_user']).first()
+
+    if user:
+        work_history_user = WorkHistoryUser.objects.create(
+                                  work_history_user=user,
+                                  location=request.data['location'],
+                                  date=request.data['date'],
+                                  cost=request.data['cost'],
+                                                      )
+        work_history_user.save()
+        return Response('ok')
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def get_work_history_user_id_serializer(request):
+    item = WorkHistoryUser.objects.filter(work_history_user=request.data['id'])
+    if item:
+        serializer = WorkHistoryUserSerialzer(item, many=True)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
