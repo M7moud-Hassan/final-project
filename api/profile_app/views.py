@@ -180,6 +180,8 @@ def add_history_employment(request):
         return Response('ok')
     else:
         Response('not fount free')
+
+@api_view(['POST'])
 def clientDetails(request):
     id=request.data['id']
     user=RegisterUser.objects.filter(id=id).first()
