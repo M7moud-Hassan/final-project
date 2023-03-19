@@ -34,8 +34,8 @@ def signup_freeLancer(request):
 
         print(messages)
 
-        #to_email = [user.data['email']]
-        #from_email = settings.EMAIL_HOST_USER
+        to_email = [user.data['email']]
+        from_email = settings.EMAIL_HOST_USER
         #send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
@@ -47,18 +47,19 @@ def registerUserSerialzer(request):
     user = SignUpUserSerialzer(data=request.data)
     if user.is_valid():
         hashPassword = make_password(user.data['password'])
-        input = RegisterUser.objects.create(fname=user.data['fname'], lname=user.data['lname'],
+        register = RegisterUser.objects.create(fname=user.data['fname'], lname=user.data['lname'],
                                             email=user.data['email'],
                                             password=hashPassword, phone=user.data['phone'])
 
         mail_subject = 'Activation link has been sent to your email id'
         messages = "http://localhost:3000/activate_user/" + str(
-            urlsafe_base64_encode(force_bytes(input.id))) + "/" + Reg_Token.make_token(input)
+            urlsafe_base64_encode(force_bytes(register.id))) + "/" + Reg_Token.make_token(register)
 
         print(messages)
 
-       # to_email = [user.data['email']]
-       # from_email = settings.EMAIL_HOST_USER
+        print(register.email)
+        to_email = [register.email]
+        from_email = settings.EMAIL_HOST_USER
         #send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
@@ -161,6 +162,7 @@ def save_overview(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         registerFreelancer = RegisterFreelancer.objects.filter(id=data['id']).first()
+        registerFreelancer.job_title = registerFreelancer.job_title
         registerFreelancer.overview = data['overview']
         registerFreelancer.save()
         return JsonResponse({'id': registerFreelancer.id})
@@ -180,17 +182,17 @@ def rest_password_view_user(request):
 
 @api_view(['POST'])
 def login(request):
+
     email= request.data['email']
     password=request.data['password']
-
     user_free=RegisterFreelancer.objects.filter(email=email).first()
     if user_free:
         if check_password(password,user_free.password):
             if user_free.is_active:
                 if user_free.is_complete_date:
-                    return Response({'ress':'ok',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
+                    return Response({'ress':'ok',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name,"type":"free"})
                 else:
-                    return Response({'ress':'not complete'})
+                    return Response({'ress':'not complete',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
             else:
                 return Response({"ress": 'not active',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
         else:
@@ -199,14 +201,15 @@ def login(request):
         user_free=RegisterUser.objects.filter(email=email).first()
         if user_free:
             if check_password(password, user_free.password):
+                print(user_free.is_active)
                 if user_free.is_active:
-                    return Response({'ress':'ok',"id": user_free.id,"name":user_free.fname+' '+user_free.lname})
+                    return Response({'ress':'ok',"id": user_free.id,"name":user_free.fname+' '+user_free.lname,"type":"client"})
                 else:
                     return Response({"ress": 'not active'})
             else:
                 return Response({"ress": 'password worog'})
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"ress":"not found"})
 
 
 @api_view(['POST'])
@@ -255,7 +258,6 @@ def addSkills(request):
 def addJobTitle(request):
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
-
         user.job_title=request.data['jobtitle']
         user.save()
         return JsonResponse({'message': 'Job title added'})
@@ -308,14 +310,25 @@ def check_email(request) :
 
 @api_view(['POST'])
 def add_address(request):
+    print(request.data)
     id = request.data['id']
     user = RegisterFreelancer.objects.filter(id=id).first()
     if user:
+        user.overview=user.overview
         user.street_address=request.data['street_address']
         user.city=request.data['city']
         user.state=request.data['state']
         user.postal_code=request.data['postal_code']
-        user.is_complete_date=True
+        user.user_image=request.data['image']
+        user.is_complete_date = True
+        user.save()
+        user.overview = user.overview
+        user.street_address = request.data['street_address']
+        user.city = request.data['city']
+        user.state = request.data['state']
+        user.postal_code = request.data['postal_code']
+        user.user_image = request.data['image']
+        user.is_complete_date = True
         user.save()
         return Response('add address')
     else:

@@ -47,7 +47,7 @@ class RegisterFreelancer(models.Model):
     password=models.CharField(max_length=300)
     job_title=models.CharField(null=True,max_length=300)
     overview=models.CharField(max_length=500,null=True)
-    user_image=models.ImageField(upload_to='static_dirs/images/user_image',null=True,)
+    user_image=models.ImageField(upload_to='images/freelancer/profile/',null=True,)
     street_address=models.CharField(max_length=50,null=True,)
     city=models.CharField(max_length=50,null=True,)
     state=models.CharField(max_length=50,null=True,)
@@ -57,6 +57,8 @@ class RegisterFreelancer(models.Model):
     skills=models.ManyToManyField(Skills,null=True,)
     services=models.ManyToManyField(Services,null=True,)
     is_complete_date=models.BooleanField(default=False)
+    def __str__(self):
+        return  f'{self.first_name} {self.last_name}'
 
 class RegisterUser(models.Model):
     id = models.AutoField
@@ -66,7 +68,9 @@ class RegisterUser(models.Model):
     email=models.EmailField(max_length=70)
     password=models.CharField(max_length=100)
     is_active=models.BooleanField(default=False)
-    image=models.ImageField(upload_to='static_dirs/images/user_image')
+    image=models.ImageField(upload_to='images/user_profile/')
+
+
 
 
 class CertificationType(models.Model):
