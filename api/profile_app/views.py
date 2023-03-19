@@ -199,3 +199,24 @@ def clientDetails(request):
         })
     else:
         return Response('not found')
+
+@api_view(['POST'])
+def clientDetails(request):
+    id=request.data['id']
+    user=RegisterUser.objects.filter(id=id).first()
+    if user:
+        fname = user.fname
+        lname = user.lname
+        phone = user.phone
+        email = user.email
+        image = ''
+        if user.image:
+            image = base64.b64encode(user.image.read()).decode('utf-8')
+        return  Response({
+            "name":f'{fname} {lname}',
+            "phone":phone,
+            "email": email,
+            "image":image
+        })
+    else:
+        return Response('not found')
