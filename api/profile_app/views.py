@@ -90,7 +90,7 @@ def details_freelancer(request):
 
 @api_view(['POST'])
 def get_Portfilo_using_id_serializer(request):
-    items = Portflio.objects.all(id_user_free=request.data['id'])
+    items = Portflio.objects.filter(portflio_freelancer=request.data['id'])
 
     # if there is something in items else raise error
     if items:
@@ -133,6 +133,64 @@ def add_certification (request):
                                   certification_ID=request.data['certification_ID'],
                                   certification_UR=request.data['certification_UR'],
                                   certification_type=certificate_type)
+        certificate.save()
         return Response('ok')
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def add_payment (request):
+    user = RegisterFreelancer.objects.filter(id=request.data['id']).first()
+
+    if user:
+        payment = Payment.objects.create(
+                                  payment_freelancer=user,
+                                  full_name=request.data['full_name'],
+                                  street_address=request.data['street_address'],
+                                  city=request.data['city'],
+                                  state=request.data['state'],
+                                  postal_code=request.data['postal_code'],
+                                  name_on_card=request.data['name_on_card'],
+                                  credit_card_number=request.data['credit_card_number'],
+                                  exp_month=request.data['exp_month'],
+                                  exp_year=request.data['exp_year'],
+                                  cvv=request.data['cvv'],
+                                                      )
+        payment.save()
+        return Response('ok')
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+def add_payment_two (request):
+    user = RegisterFreelancer.objects.filter(id=request.data['id']).first()
+
+    if user:
+        payment_serialzer = PaymentSerialzer.objects.create(
+                                  payment_freelancer=user,
+                                  full_name=request.data['full_name'],
+                                  street_address=request.data['street_address'],
+                                  city=request.data['city'],
+                                  state=request.data['state'],
+                                  postal_code=request.data['postal_code'],
+                                  name_on_card=request.data['name_on_card'],
+                                  credit_card_number=request.data['credit_card_number'],
+                                  exp_month=request.data['exp_month'],
+                                  exp_year=request.data['exp_year'],
+                                  cvv=request.data['cvv'],
+                                                      )
+        payment_serialzer.save()
+        return Response('ok')
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def get_payment_using_id_serializer(request):
+    item = Payment.objects.filter(payment_freelancer=request.data['id'])
+    if item:
+        serializer = PaymentSerialzer(item, many=True)
+        return Response(serializer.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)

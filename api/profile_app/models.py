@@ -42,3 +42,18 @@ class Certification(models.Model):
     certification_ID = models.CharField(max_length=50)
     certification_UR = models.CharField(max_length=100)
     certification_type=models.ForeignKey(CertificationType, on_delete=models.CASCADE)
+
+
+class Payment(models.Model):
+    id = models.AutoField
+    payment_freelancer = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=150)
+    street_address = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    postal_code = models.CharField(max_length=20)
+    name_on_card = models.CharField(max_length=50)
+    credit_card_number = models.CharField(max_length=20)
+    exp_month = models.DateField()
+    exp_year = models.DateField()
+    cvv = models.IntegerField(max_length=5)
