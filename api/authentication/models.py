@@ -70,7 +70,8 @@ class RegisterUser(models.Model):
     password=models.CharField(max_length=100)
     is_active=models.BooleanField(default=False)
     image=models.ImageField(upload_to='images/user_profile/')
-
-
-
+    street=models.CharField(max_length=50, null=True, )
+    city=models.CharField(max_length=50, null=True, )
+    state=models.CharField(max_length=50, null=True, )
+    postal_code=models.CharField(max_length=20, null=True, )
 
