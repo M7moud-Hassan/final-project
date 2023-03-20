@@ -12,14 +12,9 @@ from authentication.models import RegisterUser
 
 
 # Create your views here.@api_view(['GET'])
+@api_view(['GET'])
 def get_all_certification_type_serializer(request):
-    # checking for the parameters from the URL
-    if request.query_params:
-       items = CertificationType.objects.filter(**request.query_params.dict())
-    else:
-        items = CertificationType.objects.all()
-
-    # if there is something in items else raise error
+    items = CertificationType.objects.all()
     if items:
         serializer = CertificationtypeSerialzer(items, many=True)
         return Response(serializer.data)
@@ -53,6 +48,7 @@ def details_freelancer(request):
         list_ed=[]
         for ed in educations:
             list_ed.append({
+                "id":ed.id,
                  "school":ed.school,
                 "from_year":ed.from_year
             })
@@ -160,7 +156,7 @@ def add_certification (request):
                                   certification_ID=request.data['certification_ID'],
                                   certification_UR=request.data['certification_UR'],
                                   certification_type=certificate_type)
-        return Response('ok')
+        return Response(CertificationsSerialzer(certificate).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
