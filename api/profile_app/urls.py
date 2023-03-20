@@ -19,4 +19,6 @@ urlpatterns = [
     path('FreeDetails/', FreeDetails, name='FreeDetails'),
     path('secondaryDetailsFree/', secondaryDetailsFree, name='secondary_detailsfree'),
     path('updateImageFreeUser/', updateImageFreeUser,name='update_image_freeuser'),
+    path('freelancepayment/', PaymentFreelanceUser,name='freelancepayment'),
+
 ]

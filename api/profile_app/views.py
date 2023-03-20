@@ -356,3 +356,26 @@ def updateImageFreeUser(request):
         return Response('ok')
     else:
         return Response('not found')
+
+@api_view(['POST'])
+def PaymentFreelanceUser(request):
+    print(request.data)
+    free_id=request.data['free_id']
+    user =RegisterFreelancer.objects.filter(id=1).first()
+    print(user)
+    if user:
+        PaymentFreeMethod.objects.create(
+        nameOnTheCard= request.data['nameOnTheCard'],
+        email = request.data['email'],
+        state = request.data['state'],
+        city = request.data['city'],
+        Zip_code = request.data['Zip_code'],
+        Expire_year = request.data['Expire_year'],
+        Expire_month = request.data['Expire_month'],
+        Credit_number = request.data['Credit_number'],
+        CVV = request.data['CVV'],
+        free_id=user
+        )
+        return Response('ok')
+    else:
+        return Response('not added')

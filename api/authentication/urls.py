@@ -28,5 +28,6 @@ urlpatterns = [
     path('activate_user_email/',verfy_email_register),
     path('check_email/',check_email),
 
+
  ]
 
