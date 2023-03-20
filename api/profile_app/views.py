@@ -6,20 +6,15 @@ from rest_framework.response import Response
 
 from .models import *
 from .serlializers import *
-from authentication.models import RegisterFreelancer, Skills, Services, Experience
+from authentication.models import RegisterFreelancer, Skills, Services, Experience, Education
 
 from authentication.models import RegisterUser
 
 
 # Create your views here.@api_view(['GET'])
+@api_view(['GET'])
 def get_all_certification_type_serializer(request):
-    # checking for the parameters from the URL
-    if request.query_params:
-       items = CertificationType.objects.filter(**request.query_params.dict())
-    else:
-        items = CertificationType.objects.all()
-
-    # if there is something in items else raise error
+    items = CertificationType.objects.all()
     if items:
         serializer = CertificationtypeSerialzer(items, many=True)
         return Response(serializer.data)
@@ -53,6 +48,7 @@ def details_freelancer(request):
         list_ed=[]
         for ed in educations:
             list_ed.append({
+                "id":ed.id,
                  "school":ed.school,
                 "from_year":ed.from_year
             })
@@ -160,7 +156,7 @@ def add_certification (request):
                                   certification_ID=request.data['certification_ID'],
                                   certification_UR=request.data['certification_UR'],
                                   certification_type=certificate_type)
-        return Response('ok')
+        return Response(CertificationsSerialzer(certificate).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -179,16 +175,19 @@ def add_history_work(request):
 
 @api_view(['POST'])
 def add_history_employment(request):
+    print(request.data['id'])
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
-        Employment_History.objects.create(company=request.data['company'],
+        emp= Employment_History.objects.create(
+            company=request.data['company'],
                                          location=request.data['location'],
                                          title=request.data['title'],
                                          period_from_month=request.data['period_from_month'],
                                          period_to_month=request.data['period_to_month'],
                                          is_current_work=request.data['is_current_work'],
-                                         description=request.data['description'])
-        return Response('ok')
+                                         description=request.data['description'],
+                                            id_free=user)
+        return Response(EmploymentHistorySerialzer(emp).data)
     else:
         Response('not fount free')
 
@@ -295,7 +294,7 @@ def secondaryDetails(request):
         return Response('not added')
 @api_view(['POST'])
 def updateImageUser(request):
-    print(request.data)
+
     user=RegisterUser.objects.filter(id=request.data['id']).first()
     if user:
         user.image=request.data['image']
@@ -305,6 +304,7 @@ def updateImageUser(request):
         return Response('not found')
 
 @api_view(['POST'])
+<<<<<<< HEAD
 def FreeDetails(request):
     id=request.data['id']
     user=RegisterFreelancer.objects.filter(id=id).first()
@@ -354,10 +354,23 @@ def updateImageFreeUser(request):
         user.user_image=request.data['user_image']
         user.save()
         return Response('ok')
+=======
+def delEducation(request):
+    ed=Education.objects.filter(id=request.data['id']).first()
+    if ed:
+        obj={
+                    "id":ed.id,
+                     "school":ed.school,
+                    "from_year":ed.from_year
+                }
+        ed.delete()
+        return Response(obj)
+>>>>>>> a45e2d1244d16195e20e06f1ff0ed9c024547ff1
     else:
         return Response('not found')
 
 @api_view(['POST'])
+<<<<<<< HEAD
 def PaymentFreelanceUser(request):
     print(request.data)
     free_id=request.data['free_id']
@@ -379,3 +392,29 @@ def PaymentFreelanceUser(request):
         return Response('ok')
     else:
         return Response('not added')
+=======
+def delPortFilo(request):
+    p=Portflio.objects.filter(id=request.data['id']).first()
+    if p:
+        p.delete()
+        return  Response('ok')
+    else:
+        return Response('not found')
+
+@api_view(['POST'])
+def delcertificate(request):
+    c=Certification.objects.filter(id=request.data['id']).first()
+    if c:
+        c.delete()
+        return Response('ok')
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def delHistoryEmpl(request):
+    h=Employment_History.objects.filter(id=request.data['id']).first()
+    if h:
+        h.delete()
+        return Response('ok')
+    else:
+        return Response('not found')
+>>>>>>> a45e2d1244d16195e20e06f1ff0ed9c024547ff1

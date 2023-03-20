@@ -30,6 +30,7 @@ class History_workSerialzer(serializers.ModelSerializer):
     class Meta:
         model = WorkHistory
         fields = '__all__'
+
 class EmploymentHistorySerialzer(serializers.ModelSerializer):
     class Meta:
         model = Employment_History

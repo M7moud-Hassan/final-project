@@ -137,6 +137,7 @@ def reset_password_View(request):
 def save_education(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        education=None
         for education_data in data:
             education = Education.objects.create(
                 school=education_data['school'],
@@ -152,7 +153,13 @@ def save_education(request):
             freelancer_register.education.add(education)
         freelancer_register.save()
 
-        return JsonResponse({'message': 'Educations saved successfully.'})
+        return Response(
+            {
+                "id": education.id,
+                "school": education.school,
+                "from_year": education.from_year
+            }
+        )
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
 
