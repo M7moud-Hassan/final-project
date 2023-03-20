@@ -203,7 +203,7 @@ def login(request):
             if check_password(password, user_free.password):
                 print(user_free.is_active)
                 if user_free.is_active:
-                    return Response({'ress':'ok',"id": user_free.id,"name":user_free.fname+' '+user_free.lname,"type":"client"})
+                    return Response({'ress':'ok',"id": user_free.id,"name":user_free.fname+' '+user_free.lname,"type":"user"})
                 else:
                     return Response({"ress": 'not active'})
             else:
