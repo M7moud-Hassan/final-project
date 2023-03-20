@@ -14,5 +14,6 @@ urlpatterns = [
     path('updateservices/',updateServices),
     path('delete_experience/',delete_experience),
     path('getExperience/',getExperience),
-
+    path('secondaryDetails/', secondaryDetails, name='secondary_details'),
+    path('updateImageUser/',updateImageUser)
 ]

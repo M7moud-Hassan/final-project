@@ -198,10 +198,17 @@ def clientDetails(request):
             "name":f'{fname} {lname}',
             "phone":phone,
             "email": email,
-            "image":image
+            "image":image,
+            "fname":fname,
+            "lname":lname,
+            "street":user.street,
+            "city":user.city,
+            "state":user.state,
+            "postal_code":user.postal_code
         })
     else:
         return Response('not found')
+
 
 
 @api_view(['POST'])
@@ -259,3 +266,30 @@ def getExperience(request):
         return Response({'exp':ExperiencesSerialzer(exp).data})
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def secondaryDetails(request):
+    id=request.data['id']
+    user=RegisterUser.objects.filter(id=id).first()
+    if user:
+        user.street=request.data['street']
+        user.city=request.data['city']
+        user.state=request.data['state']
+        user.postal_code=request.data['postal_code']
+        user.phone=request.data['phone']
+        user.fname=request.data['fName']
+        user.lname=request.data['lName']
+        user.save()
+        return  Response('ok')
+    else:
+        return Response('not added')
+@api_view(['POST'])
+def updateImageUser(request):
+    print(request.data)
+    user=RegisterUser.objects.filter(id=request.data['id']).first()
+    if user:
+        user.image=request.data['image']
+        user.save()
+        return Response('ok')
+    else:
+        return Response('not found')
