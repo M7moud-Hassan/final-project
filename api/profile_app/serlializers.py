@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from authentication.models import Experience
 from .models import *
 
 class ImagesProjectSerializer(serializers.ModelSerializer):
@@ -45,3 +46,9 @@ class CertificationsSerialzer(serializers.ModelSerializer):
     class Meta:
         model = Certification
         fields = '__all__'
+
+class ExperiencesSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = Experience
+        fields = '__all__'
+
