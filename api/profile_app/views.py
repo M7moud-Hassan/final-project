@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from .models import *
 from .serlializers import *
-from authentication.models import RegisterFreelancer
+from authentication.models import RegisterFreelancer, Skills, Services, Experience
 
 from authentication.models import RegisterUser
 
@@ -60,6 +60,7 @@ def details_freelancer(request):
         experiences=user.experience.all()
         for exp in experiences:
             list_exp.append({
+                "id":exp.id,
                 "title": exp.title,
                 "company": exp.company,
                 "description": exp.description
@@ -201,3 +202,60 @@ def clientDetails(request):
         })
     else:
         return Response('not found')
+
+
+@api_view(['POST'])
+def updateSkills(request):
+
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+
+        user.skills.set([])
+        user.save()
+        for sk in request.data['skills']:
+            user.skills.add(Skills.objects.filter(id=sk['value']).first())
+        user.save()
+        return  Response('ok')
+    else:
+        return Response("not found")
+
+@api_view(['POST'])
+def updateServices(request):
+    user = RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        user.services.set([])
+        user.save()
+        for sk in request.data['services']:
+            user.services.add(Services.objects.filter(id=sk['value']).first())
+        user.save()
+        return Response('ok')
+    else:
+        return Response("not found")
+
+
+@api_view(['POST'])
+def delete_experience(request):
+   result= Experience.objects.filter(id=request.data['exp_id']).first()
+   user= RegisterFreelancer.objects.filter(id=request.data['id']).first()
+   if user:
+       user.experience.remove(result)
+       ob={
+           "id": result.id,
+           "title": result.title,
+           "company": result.company,
+           "description": result.description
+       }
+       result.delete()
+       return  Response(ob)
+   else:
+       return  Response('not found')
+
+
+
+@api_view(['POST'])
+def getExperience(request):
+    exp = Experience.objects.filter(id=request.data['id']).first()
+    if exp:
+        return Response({'exp':ExperiencesSerialzer(exp).data})
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
