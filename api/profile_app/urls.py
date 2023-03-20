@@ -15,5 +15,10 @@ urlpatterns = [
     path('getExperience/',getExperience),
     path('secondaryDetails/', secondaryDetails, name='secondary_details'),
     path('updateImageUser/',updateImageUser),
-    path('getalltypesCertifications/',get_all_certification_type_serializer)
+    path('getalltypesCertifications/',get_all_certification_type_serializer),
+    path('add_history_employment/',add_history_employment),
+    path('delEducation/',delEducation),
+    path('delPortFilo/',delPortFilo),
+    path('delcertificate/',delcertificate),
+    path('delHistoryEmpl/',delHistoryEmpl)
 ]

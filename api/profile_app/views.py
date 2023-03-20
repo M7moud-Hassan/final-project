@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from .models import *
 from .serlializers import *
-from authentication.models import RegisterFreelancer, Skills, Services, Experience
+from authentication.models import RegisterFreelancer, Skills, Services, Experience, Education
 
 from authentication.models import RegisterUser
 
@@ -175,16 +175,19 @@ def add_history_work(request):
 
 @api_view(['POST'])
 def add_history_employment(request):
+    print(request.data['id'])
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
-        Employment_History.objects.create(company=request.data['company'],
+        emp= Employment_History.objects.create(
+            company=request.data['company'],
                                          location=request.data['location'],
                                          title=request.data['title'],
                                          period_from_month=request.data['period_from_month'],
                                          period_to_month=request.data['period_to_month'],
                                          is_current_work=request.data['is_current_work'],
-                                         description=request.data['description'])
-        return Response('ok')
+                                         description=request.data['description'],
+                                            id_free=user)
+        return Response(EmploymentHistorySerialzer(emp).data)
     else:
         Response('not fount free')
 
@@ -291,11 +294,51 @@ def secondaryDetails(request):
         return Response('not added')
 @api_view(['POST'])
 def updateImageUser(request):
-    print(request.data)
+
     user=RegisterUser.objects.filter(id=request.data['id']).first()
     if user:
         user.image=request.data['image']
         user.save()
+        return Response('ok')
+    else:
+        return Response('not found')
+
+@api_view(['POST'])
+def delEducation(request):
+    ed=Education.objects.filter(id=request.data['id']).first()
+    if ed:
+        obj={
+                    "id":ed.id,
+                     "school":ed.school,
+                    "from_year":ed.from_year
+                }
+        ed.delete()
+        return Response(obj)
+    else:
+        return Response('not found')
+
+@api_view(['POST'])
+def delPortFilo(request):
+    p=Portflio.objects.filter(id=request.data['id']).first()
+    if p:
+        p.delete()
+        return  Response('ok')
+    else:
+        return Response('not found')
+
+@api_view(['POST'])
+def delcertificate(request):
+    c=Certification.objects.filter(id=request.data['id']).first()
+    if c:
+        c.delete()
+        return Response('ok')
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def delHistoryEmpl(request):
+    h=Employment_History.objects.filter(id=request.data['id']).first()
+    if h:
+        h.delete()
         return Response('ok')
     else:
         return Response('not found')
