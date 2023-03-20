@@ -303,3 +303,56 @@ def updateImageUser(request):
         return Response('ok')
     else:
         return Response('not found')
+
+@api_view(['POST'])
+def FreeDetails(request):
+    id=request.data['id']
+    user=RegisterFreelancer.objects.filter(id=id).first()
+    if user:
+        first_name = user.first_name
+        last_name = user.last_name
+        phone_number = user.phone_number
+        email = user.email
+        user_image = ''
+        if user.user_image:
+            user_image = base64.b64encode(user.user_image.read()).decode('utf-8')
+        return  Response({
+            "name":f'{first_name} {last_name}',
+            "phone_number":phone_number,
+            "email": email,
+            "user_image":user_image,
+            "first_name":first_name,
+            "last_name":last_name,
+            "street_address":user.street_address,
+            "city":user.city,
+            "state":user.state,
+            "postal_code":user.postal_code
+        })
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def secondaryDetailsFree(request):
+    id=request.data['id']
+    user=RegisterFreelancer.objects.filter(id=id).first()
+    if user:
+        user.street_address=request.data['street_address']
+        user.city=request.data['city']
+        user.state=request.data['state']
+        user.postal_code=request.data['postal_code']
+        user.phone_number=request.data['phone_number']
+        user.first_name=request.data['first_name']
+        user.last_name=request.data['last_name']
+        user.save()
+        return Response('ok')
+    else:
+        return Response('not added')
+@api_view(['POST'])
+def updateImageFreeUser(request):
+    print(request.data)
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        user.user_image=request.data['user_image']
+        user.save()
+        return Response('ok')
+    else:
+        return Response('not found')

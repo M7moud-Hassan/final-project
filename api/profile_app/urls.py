@@ -15,5 +15,8 @@ urlpatterns = [
     path('delete_experience/',delete_experience),
     path('getExperience/',getExperience),
     path('secondaryDetails/', secondaryDetails, name='secondary_details'),
-    path('updateImageUser/',updateImageUser)
+    path('updateImageUser/',updateImageUser),
+    path('FreeDetails/', FreeDetails, name='FreeDetails'),
+    path('secondaryDetailsFree/', secondaryDetailsFree, name='secondary_detailsfree'),
+    path('updateImageFreeUser/', updateImageFreeUser,name='update_image_freeuser'),
 ]
