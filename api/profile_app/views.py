@@ -299,3 +299,45 @@ def updateImageUser(request):
         return Response('ok')
     else:
         return Response('not found')
+
+
+
+@api_view(['POST'])
+def delEducation(request):
+    ed=Education.objects.filter(id=request.data['id']).first()
+    if ed:
+        obj={
+                    "id":ed.id,
+                     "school":ed.school,
+                    "from_year":ed.from_year
+                }
+        ed.delete()
+        return Response(obj)
+    else:
+        return Response('not found')
+
+@api_view(['POST'])
+def delPortFilo(request):
+    p=Portflio.objects.filter(id=request.data['id']).first()
+    if p:
+        p.delete()
+        return  Response('ok')
+    else:
+        return Response('not found')
+
+@api_view(['POST'])
+def delcertificate(request):
+    c=Certification.objects.filter(id=request.data['id']).first()
+    if c:
+        c.delete()
+        return Response('ok')
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def delHistoryEmpl(request):
+    h=Employment_History.objects.filter(id=request.data['id']).first()
+    if h:
+        h.delete()
+        return Response('ok')
+    else:
+        return Response('not found')
