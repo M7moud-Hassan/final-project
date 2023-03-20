@@ -304,7 +304,7 @@ def updateImageUser(request):
         return Response('not found')
 
 @api_view(['POST'])
-<<<<<<< HEAD
+
 def FreeDetails(request):
     id=request.data['id']
     user=RegisterFreelancer.objects.filter(id=id).first()
@@ -354,7 +354,7 @@ def updateImageFreeUser(request):
         user.user_image=request.data['user_image']
         user.save()
         return Response('ok')
-=======
+
 def delEducation(request):
     ed=Education.objects.filter(id=request.data['id']).first()
     if ed:
@@ -365,12 +365,12 @@ def delEducation(request):
                 }
         ed.delete()
         return Response(obj)
->>>>>>> a45e2d1244d16195e20e06f1ff0ed9c024547ff1
+
     else:
         return Response('not found')
 
 @api_view(['POST'])
-<<<<<<< HEAD
+
 def PaymentFreelanceUser(request):
     print(request.data)
     free_id=request.data['free_id']
@@ -392,7 +392,7 @@ def PaymentFreelanceUser(request):
         return Response('ok')
     else:
         return Response('not added')
-=======
+
 def delPortFilo(request):
     p=Portflio.objects.filter(id=request.data['id']).first()
     if p:
@@ -417,4 +417,4 @@ def delHistoryEmpl(request):
         return Response('ok')
     else:
         return Response('not found')
->>>>>>> a45e2d1244d16195e20e06f1ff0ed9c024547ff1
+
