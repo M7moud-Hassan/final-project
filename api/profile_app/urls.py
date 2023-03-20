@@ -10,5 +10,6 @@ urlpatterns = [
     path('get_all_certificatins/', get_all_certificatins_serializer, name='get_all_certificatins_serializer'),
     path("get_details_free/",details_freelancer),
     path('clientDetails/',clientDetails,name='clientDetails'),
-    path('secondaryDetails/', secondaryDetails, name='secondary_details')
+    path('secondaryDetails/', secondaryDetails, name='secondary_details'),
+    path('updateImageUser/',updateImageUser)
 ]

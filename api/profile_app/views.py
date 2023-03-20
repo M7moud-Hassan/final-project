@@ -199,7 +199,11 @@ def clientDetails(request):
             "email": email,
             "image":image,
             "fname":fname,
-            "lname":lname
+            "lname":lname,
+            "street":user.street,
+            "city":user.city,
+            "state":user.state,
+            "postal_code":user.postal_code
         })
     else:
         return Response('not found')
@@ -214,7 +218,19 @@ def secondaryDetails(request):
         user.state=request.data['state']
         user.postal_code=request.data['postal_code']
         user.phone=request.data['phone']
+        user.fname=request.data['fName']
+        user.lname=request.data['lName']
         user.save()
         return  Response('ok')
     else:
         return Response('not added')
+@api_view(['POST'])
+def updateImageUser(request):
+    print(request.data)
+    user=RegisterUser.objects.filter(id=request.data['id']).first()
+    if user:
+        user.image=request.data['image']
+        user.save()
+        return Response('ok')
+    else:
+        return Response('not found')
