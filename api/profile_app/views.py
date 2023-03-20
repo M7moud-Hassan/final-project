@@ -124,14 +124,24 @@ def get_Portfilo_using_id_serializer(request):
 @api_view(['POST'])
 def add_portflio(request):
     user =RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    portflio=None
     if user:
-        portflio=Portflio.objects.create(portflio_freelancer=user,title=request.data['title']
-                          ,linkVide=request.data['linkVide'],
-                          description=request.data['linkVide'])
-        for f in request.FILES.getlist('images'):
+        if (request.data['date_time'] == '0000-00-00'):
+            portflio = Portflio.objects.create(
+                portflio_freelancer=user,
+                title=request.data['title']
+                , linkVide=request.data['linkVide'],
+                description=request.data['description'],)
+        else:
+            portflio = Portflio.objects.create(
+                portflio_freelancer=user,
+                title=request.data['title']
+                , linkVide=request.data['linkVide'],
+                description=request.data['description'],
+                date_time=request.data['date_time'])
+        for f in request.FILES.getlist('images[]'):
             imageProject = ImagesProject.objects.create(image=f)
             portflio.images.add(imageProject)
-
         portflio.save()
         return Response('ok')
     else:
