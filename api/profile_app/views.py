@@ -371,11 +371,10 @@ def delEducation(request):
         return Response('not found')
 
 @api_view(['POST'])
-
 def PaymentFreelanceUser(request):
     print(request.data)
     free_id=request.data['free_id']
-    user =RegisterFreelancer.objects.filter(id=1).first()
+    user =RegisterFreelancer.objects.filter(id=free_id).first()
     print(user)
     if user:
         PaymentFreeMethod.objects.create(
@@ -393,6 +392,29 @@ def PaymentFreelanceUser(request):
         return Response('ok')
     else:
         return Response('not added')
+
+@api_view(['POST'])
+def PaymentUser(request):
+    client_id=request.data['client_id']
+    user =RegisterUser.objects.filter(id=client_id).first()
+    print(user)
+    if user:
+        PaymentMethod.objects.create(
+        nameOnTheCard= request.data['nameOnTheCard'],
+        email = request.data['email'],
+        state = request.data['state'],
+        city = request.data['city'],
+        Zip_code = request.data['Zip_code'],
+        Expire_year = request.data['Expire_year'],
+        Expire_month = request.data['Expire_month'],
+        Credit_number = request.data['Credit_number'],
+        CVV = request.data['CVV'],
+        client_id=user
+        )
+        return Response('ok')
+    else:
+        return Response('not added')
+
 
 def delPortFilo(request):
     p=Portflio.objects.filter(id=request.data['id']).first()
