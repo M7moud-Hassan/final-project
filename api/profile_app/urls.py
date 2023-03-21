@@ -15,18 +15,18 @@ urlpatterns = [
     path('getExperience/',getExperience),
     path('secondaryDetails/', secondaryDetails, name='secondary_details'),
     path('updateImageUser/',updateImageUser),
-<<<<<<< HEAD
     path('FreeDetails/', FreeDetails, name='FreeDetails'),
     path('secondaryDetailsFree/', secondaryDetailsFree, name='secondary_detailsfree'),
     path('updateImageFreeUser/', updateImageFreeUser,name='update_image_freeuser'),
     path('freelancepayment/', PaymentFreelanceUser,name='freelancepayment'),
-
-=======
     path('getalltypesCertifications/',get_all_certification_type_serializer),
     path('add_history_employment/',add_history_employment),
     path('delEducation/',delEducation),
     path('delPortFilo/',delPortFilo),
     path('delcertificate/',delcertificate),
-    path('delHistoryEmpl/',delHistoryEmpl)
->>>>>>> a45e2d1244d16195e20e06f1ff0ed9c024547ff1
+    path('delHistoryEmpl/',delHistoryEmpl),
+    path('changePasswordFree/',changePasswordFreelancer, name='changePasswordFree'),
+    path('changePassword/', changePassword, name='changePassword'),
+
+
 ]

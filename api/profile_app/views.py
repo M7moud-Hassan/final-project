@@ -1,5 +1,6 @@
 import base64
 
+from django.contrib.auth.hashers import check_password, make_password
 from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -418,3 +419,28 @@ def delHistoryEmpl(request):
     else:
         return Response('not found')
 
+@api_view(['POST'])
+def changePasswordFreelancer(request):
+        user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+        print(user)
+        password = request.data['password']
+        if user:
+            if check_password(password, user.password):
+                user.password=make_password(request.data['newPassword'])
+                user.save()
+                return Response('ok')
+            else:
+                return Response('wrong password')
+
+@api_view(['POST'])
+def changePassword(request):
+        user=RegisterUser.objects.filter(id=request.data['id']).first()
+        print(user)
+        password = request.data['password']
+        if user:
+            if check_password(password, user.password):
+                user.password=make_password(request.data['newPassword'])
+                user.save()
+                return Response('ok')
+            else:
+                return Response('wrong password')
