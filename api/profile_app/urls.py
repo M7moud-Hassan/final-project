@@ -28,6 +28,6 @@ urlpatterns = [
     path('delHistoryEmpl/',delHistoryEmpl),
     path('changePasswordFree/',changePasswordFreelancer, name='changePasswordFree'),
     path('changePassword/', changePassword, name='changePassword'),
-
+    path('freePaymentCards/',FreePaymentCards,name='freePaymentCards')
 
 ]
