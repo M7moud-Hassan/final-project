@@ -301,7 +301,6 @@ def updateImageUser(request):
         return Response('not found')
 
 @api_view(['POST'])
-
 def FreeDetails(request):
     id=request.data['id']
     user=RegisterFreelancer.objects.filter(id=id).first()
