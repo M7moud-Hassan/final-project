@@ -1,25 +1,21 @@
 import base64
 
+from django.contrib.auth.hashers import check_password, make_password
 from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import *
 from .serlializers import *
-from authentication.models import RegisterFreelancer, Skills, Services, Experience
+from authentication.models import RegisterFreelancer, Skills, Services, Experience, Education
 
 from authentication.models import RegisterUser
 
 
 # Create your views here.@api_view(['GET'])
+@api_view(['GET'])
 def get_all_certification_type_serializer(request):
-    # checking for the parameters from the URL
-    if request.query_params:
-       items = CertificationType.objects.filter(**request.query_params.dict())
-    else:
-        items = CertificationType.objects.all()
-
-    # if there is something in items else raise error
+    items = CertificationType.objects.all()
     if items:
         serializer = CertificationtypeSerialzer(items, many=True)
         return Response(serializer.data)
@@ -53,6 +49,7 @@ def details_freelancer(request):
         list_ed=[]
         for ed in educations:
             list_ed.append({
+                "id":ed.id,
                  "school":ed.school,
                 "from_year":ed.from_year
             })
@@ -80,6 +77,7 @@ def details_freelancer(request):
         for p in portfilos:
             portfilos_list.append({
                 "id":p.id,
+                "date_time":p.date_time,
                 "title":p.title,
                 "linkvideo":p.linkVide,
                 "description":p.description,
@@ -124,14 +122,24 @@ def get_Portfilo_using_id_serializer(request):
 @api_view(['POST'])
 def add_portflio(request):
     user =RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    portflio=None
     if user:
-        portflio=Portflio.objects.create(portflio_freelancer=user,title=request.data['title']
-                          ,linkVide=request.data['linkVide'],
-                          description=request.data['linkVide'])
-        for f in request.FILES.getlist('images'):
+        if (request.data['date_time'] == '0000-00-00'):
+            portflio = Portflio.objects.create(
+                portflio_freelancer=user,
+                title=request.data['title']
+                , linkVide=request.data['linkVide'],
+                description=request.data['description'],)
+        else:
+            portflio = Portflio.objects.create(
+                portflio_freelancer=user,
+                title=request.data['title']
+                , linkVide=request.data['linkVide'],
+                description=request.data['description'],
+                date_time=request.data['date_time'])
+        for f in request.FILES.getlist('images[]'):
             imageProject = ImagesProject.objects.create(image=f)
             portflio.images.add(imageProject)
-
         portflio.save()
         return Response('ok')
     else:
@@ -150,7 +158,7 @@ def add_certification (request):
                                   certification_ID=request.data['certification_ID'],
                                   certification_UR=request.data['certification_UR'],
                                   certification_type=certificate_type)
-        return Response('ok')
+        return Response(CertificationsSerialzer(certificate).data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -169,16 +177,19 @@ def add_history_work(request):
 
 @api_view(['POST'])
 def add_history_employment(request):
+    print(request.data['id'])
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
-        Employment_History.objects.create(company=request.data['company'],
+        emp= Employment_History.objects.create(
+            company=request.data['company'],
                                          location=request.data['location'],
                                          title=request.data['title'],
                                          period_from_month=request.data['period_from_month'],
                                          period_to_month=request.data['period_to_month'],
                                          is_current_work=request.data['is_current_work'],
-                                         description=request.data['description'])
-        return Response('ok')
+                                         description=request.data['description'],
+                                            id_free=user)
+        return Response(EmploymentHistorySerialzer(emp).data)
     else:
         Response('not fount free')
 
@@ -238,8 +249,6 @@ def updateServices(request):
         return Response('ok')
     else:
         return Response("not found")
-
-
 @api_view(['POST'])
 def delete_experience(request):
    result= Experience.objects.filter(id=request.data['exp_id']).first()
@@ -256,9 +265,6 @@ def delete_experience(request):
        return  Response(ob)
    else:
        return  Response('not found')
-
-
-
 @api_view(['POST'])
 def getExperience(request):
     exp = Experience.objects.filter(id=request.data['id']).first()
@@ -285,7 +291,7 @@ def secondaryDetails(request):
         return Response('not added')
 @api_view(['POST'])
 def updateImageUser(request):
-    print(request.data)
+
     user=RegisterUser.objects.filter(id=request.data['id']).first()
     if user:
         user.image=request.data['image']
@@ -293,3 +299,136 @@ def updateImageUser(request):
         return Response('ok')
     else:
         return Response('not found')
+
+@api_view(['POST'])
+
+def FreeDetails(request):
+    id=request.data['id']
+    user=RegisterFreelancer.objects.filter(id=id).first()
+    if user:
+        first_name = user.first_name
+        last_name = user.last_name
+        phone_number = user.phone_number
+        email = user.email
+        user_image = ''
+        if user.user_image:
+            user_image = base64.b64encode(user.user_image.read()).decode('utf-8')
+        return  Response({
+            "name":f'{first_name} {last_name}',
+            "phone_number":phone_number,
+            "email": email,
+            "user_image":user_image,
+            "first_name":first_name,
+            "last_name":last_name,
+            "street_address":user.street_address,
+            "city":user.city,
+            "state":user.state,
+            "postal_code":user.postal_code
+        })
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def secondaryDetailsFree(request):
+    id=request.data['id']
+    user=RegisterFreelancer.objects.filter(id=id).first()
+    if user:
+        user.street_address=request.data['street_address']
+        user.city=request.data['city']
+        user.state=request.data['state']
+        user.postal_code=request.data['postal_code']
+        user.phone_number=request.data['phone_number']
+        user.first_name=request.data['first_name']
+        user.last_name=request.data['last_name']
+        user.save()
+        return Response('ok')
+    else:
+        return Response('not added')
+@api_view(['POST'])
+def updateImageFreeUser(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        user.user_image=request.data['user_image']
+        user.save()
+        return Response('ok')
+@api_view(['POST'])
+def delEducation(request):
+    ed=Education.objects.filter(id=request.data['id']).first()
+    if ed:
+        obj={
+                    "id":ed.id,
+                     "school":ed.school,
+                    "from_year":ed.from_year
+                }
+        ed.delete()
+        return Response(obj)
+
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def PaymentFreelanceUser(request):
+    free_id=request.data['free_id']
+    user =RegisterFreelancer.objects.filter(id=1).first()
+    if user:
+        PaymentFreeMethod.objects.create(
+        nameOnTheCard= request.data['nameOnTheCard'],
+        email = request.data['email'],
+        state = request.data['state'],
+        city = request.data['city'],
+        Zip_code = request.data['Zip_code'],
+        Expire_year = request.data['Expire_year'],
+        Expire_month = request.data['Expire_month'],
+        Credit_number = request.data['Credit_number'],
+        CVV = request.data['CVV'],
+        free_id=user
+        )
+        return Response('ok')
+    else:
+        return Response('not added')
+@api_view(['POST'])
+def delPortFilo(request):
+    p=Portflio.objects.filter(id=request.data['id']).first()
+    if p:
+        p.delete()
+        return  Response('ok')
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def delcertificate(request):
+    c=Certification.objects.filter(id=request.data['id']).first()
+    if c:
+        c.delete()
+        return Response('ok')
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def delHistoryEmpl(request):
+    h=Employment_History.objects.filter(id=request.data['id']).first()
+    if h:
+        h.delete()
+        return Response('ok')
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def changePasswordFreelancer(request):
+        user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+        print(user)
+        password = request.data['password']
+        if user:
+            if check_password(password, user.password):
+                user.password=make_password(request.data['newPassword'])
+                user.save()
+                return Response('ok')
+            else:
+                return Response('wrong password')
+@api_view(['POST'])
+def changePassword(request):
+        user=RegisterUser.objects.filter(id=request.data['id']).first()
+        print(user)
+        password = request.data['password']
+        if user:
+            if check_password(password, user.password):
+                user.password=make_password(request.data['newPassword'])
+                user.save()
+                return Response('ok')
+            else:
+                return Response('wrong password')
