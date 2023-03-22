@@ -215,7 +215,8 @@ def clientDetails(request):
             "street":user.street,
             "city":user.city,
             "state":user.state,
-            "postal_code":user.postal_code
+            "postal_code":user.postal_code,
+            "is_payments":True if PaymentMethod.objects.filter(client_id=id) else False
         })
     else:
         return Response('not found')
