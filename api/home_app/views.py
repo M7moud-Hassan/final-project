@@ -12,6 +12,9 @@ from profile_app.models import Portflio, Certification
 # Create your views here.
 from datetime import date
 
+from authentication.models import RegisterUser
+from home_app.models import JobImages
+
 today = date.today()
 
 
@@ -88,3 +91,30 @@ def Dislike_job(request):
         return  Response({"res":"ok","id":dis.id})
     else:
         return  Response('not found')
+
+
+@api_view(['POST'])
+def AddJobClient(request):
+    print(request.data)
+    client_id=request.data['client_id']
+    print(client_id)
+    user =RegisterUser.objects.filter(id=client_id).first()
+    print(user)
+    if user:
+        images = request.FILES.getlist('images')
+        Jobs = Job.objects.create(
+            title= request.data['title'],
+            cost = request.data['cost'],
+            description = request.data['description'],
+            is_pyment = request.data['is_pyment'],
+            client_id=user
+        )
+        for img in images :
+            jobImage = JobImages.objects.create(image=img)
+            Jobs.images.add(jobImage),
+        return Response('ok')
+    else:
+        return Response('not added')
+
+
+

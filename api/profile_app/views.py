@@ -462,7 +462,6 @@ def changePassword(request):
                 return Response('wrong password')
 
 
-
 @api_view(['POST'])
 def FreePaymentCards(request):
     free_id = request.data['free_id']
@@ -487,3 +486,4 @@ def clientPaymentCards(request):
         ).data)
     else:
         return Response({'message': 'not found'})
+
