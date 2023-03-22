@@ -472,25 +472,23 @@ def changePassword(request):
 def FreePaymentCards(request):
     free_id = request.data['free_id']
     print(free_id)
-    cards = PaymentFreeMethod.objects.all(free_id=free_id)
+    cards = PaymentFreeMethod.objects.filter(free_id=free_id)
     print(cards)
     if cards:
-        cont = []
-        for card in cards:
-           cont.append({
-               "id": card.id,
-               "nameOnTheCard": card.nameOnTheCard,
-               "email": card.email,
-               "city": card.city,
-               "state": card.state,
-               "Zip_code": card.Zip_code,
-               "Expire_year": card.Expire_year,
-               "Expire_month": card.Expire_month,
-               "Credit_number": card.Credit_number,
-               "CVV ": card.CVV,
-
-                })
-
-        return Response('anydata')
+        return Response(PaymentFreeMethodSerial(
+            cards,many=True
+        ).data)
     else:
-        return Response('not found')
+        return Response({'message': 'not found'})
+@api_view(['POST'])
+def clientPaymentCards(request):
+    client_id = request.data['client_id']
+    print(client_id)
+    cards = PaymentMethod.objects.filter(client_id=client_id)
+    print(cards)
+    if cards:
+        return Response(PaymentMethodSerial(
+            cards,many=True
+        ).data)
+    else:
+        return Response({'message': 'not found'})
