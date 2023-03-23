@@ -97,9 +97,7 @@ def Dislike_job(request):
 def AddJobClient(request):
     print(request.data)
     client_id=request.data['client_id']
-    print(client_id)
     user =RegisterUser.objects.filter(id=client_id).first()
-    print(user)
     if user:
         images = request.FILES.getlist('images')
         Jobs = Job.objects.create(
