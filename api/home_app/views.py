@@ -124,3 +124,44 @@ def AddJobClient(request):
 
 
 
+@api_view(['POST'])
+def clientLatestJobs(request):
+    client=RegisterUser.objects.filter(id=request.data['client_id']).first()
+    if client:
+        jobs=Job.objects.filter(client_id=client)
+        return  Response(JobSerializer(jobs,many=True).data)
+    else:
+        return Response('not found')
+
+@api_view(['POST'])
+def jobDetails(request):
+    job=Job.objects.filter(id=request.data['id']).first()
+    if job:
+        images=[]
+        for im in job.images.all():
+            images.append(im.image.url)
+        skills=[]
+        for sk in job.skills.all():
+            skills.append(sk.name)
+        proposals=[]
+        for p in  job.Proposals.all():
+            proposals.append({
+                "id":p.id,
+                "name":f'${p.first_name} ${p.last_name}',
+                "image":p.user_image.url
+            })
+        numlikes=len(job.likes.all())
+        numDislike=len(job.dislikes.all())
+        return Response({
+            "title":job.title,
+            "create_at":job.create_at,
+            'cost':job.cost,
+            "images":images,
+            "description":job.description,
+            "skills":skills,
+            "proposals":proposals,
+            "numlikes":numlikes,
+            "numDislike":numDislike
+        })
+    else:
+        return  Response('not found')
