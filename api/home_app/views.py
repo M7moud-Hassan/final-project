@@ -123,4 +123,15 @@ def AddJobClient(request):
         return Response('not added')
 
 
-
+@api_view(['POST'])
+def clientLatestJobs(request):
+    client_id = request.data['client_id']
+    print(client_id)
+    Jobs = Job.objects.filter(client_id=client_id)
+    print(Jobs)
+    if Jobs:
+        return Response(JobSerializer(
+            Jobs,many=True
+        ).data)
+    else:
+        return Response({'message': 'not found'})
