@@ -61,6 +61,7 @@ def like_job(request):
 
 @api_view(['POST'])
 def removelike_job(request):
+        print(request.data)
         like_id=LikeJob.objects.filter(id=request.data['like_id']).first()
         if like_id:
             like_id.delete()
@@ -70,6 +71,7 @@ def removelike_job(request):
 
 @api_view(['POST'])
 def removeDislike_job(request):
+        print(request.data)
         like_id=DisLike.objects.filter(id=request.data['like_id']).first()
         if like_id:
             like_id.delete()
