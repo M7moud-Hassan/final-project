@@ -53,3 +53,12 @@ class ExperiencesSerialzer(serializers.ModelSerializer):
         model = Experience
         fields = '__all__'
 
+class PaymentFreeMethodSerial(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentFreeMethod
+        fields = '__all__'
+
+class PaymentMethodSerial(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentMethod
+        fields = '__all__'

@@ -77,6 +77,7 @@ def details_freelancer(request):
         for p in portfilos:
             portfilos_list.append({
                 "id":p.id,
+                "date_time":p.date_time,
                 "title":p.title,
                 "linkvideo":p.linkVide,
                 "description":p.description,
@@ -214,7 +215,8 @@ def clientDetails(request):
             "street":user.street,
             "city":user.city,
             "state":user.state,
-            "postal_code":user.postal_code
+            "postal_code":user.postal_code,
+            "is_payments":True if PaymentMethod.objects.filter(client_id=id) else False
         })
     else:
         return Response('not found')
@@ -248,8 +250,6 @@ def updateServices(request):
         return Response('ok')
     else:
         return Response("not found")
-
-
 @api_view(['POST'])
 def delete_experience(request):
    result= Experience.objects.filter(id=request.data['exp_id']).first()
@@ -266,9 +266,6 @@ def delete_experience(request):
        return  Response(ob)
    else:
        return  Response('not found')
-
-
-
 @api_view(['POST'])
 def getExperience(request):
     exp = Experience.objects.filter(id=request.data['id']).first()
@@ -305,7 +302,6 @@ def updateImageUser(request):
         return Response('not found')
 
 @api_view(['POST'])
-
 def FreeDetails(request):
     id=request.data['id']
     user=RegisterFreelancer.objects.filter(id=id).first()
@@ -349,13 +345,12 @@ def secondaryDetailsFree(request):
         return Response('not added')
 @api_view(['POST'])
 def updateImageFreeUser(request):
-    print(request.data)
     user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
     if user:
         user.user_image=request.data['user_image']
         user.save()
         return Response('ok')
-
+@api_view(['POST'])
 def delEducation(request):
     ed=Education.objects.filter(id=request.data['id']).first()
     if ed:
@@ -369,13 +364,10 @@ def delEducation(request):
 
     else:
         return Response('not found')
-
 @api_view(['POST'])
-
 def PaymentFreelanceUser(request):
-    print(request.data)
     free_id=request.data['free_id']
-    user =RegisterFreelancer.objects.filter(id=1).first()
+    user =RegisterFreelancer.objects.filter(id=free_id).first()
     print(user)
     if user:
         PaymentFreeMethod.objects.create(
@@ -394,6 +386,33 @@ def PaymentFreelanceUser(request):
     else:
         return Response('not added')
 
+
+@api_view(['POST'])
+def PaymentUser(request):
+    client_id=request.data['client_id']
+    user =RegisterUser.objects.filter(id=client_id).first()
+    print(user)
+    if user:
+        PaymentMethod.objects.create(
+        nameOnTheCard= request.data['nameOnTheCard'],
+        email = request.data['email'],
+        state = request.data['state'],
+        city = request.data['city'],
+        Zip_code = request.data['Zip_code'],
+        Expire_year = request.data['Expire_year'],
+        Expire_month = request.data['Expire_month'],
+        Credit_number = request.data['Credit_number'],
+        CVV = request.data['CVV'],
+        client_id=user
+        )
+        return Response('ok')
+    else:
+        return Response('not added')
+
+
+
+@api_view(['POST'])
+
 def delPortFilo(request):
     p=Portflio.objects.filter(id=request.data['id']).first()
     if p:
@@ -401,7 +420,6 @@ def delPortFilo(request):
         return  Response('ok')
     else:
         return Response('not found')
-
 @api_view(['POST'])
 def delcertificate(request):
     c=Certification.objects.filter(id=request.data['id']).first()
@@ -418,7 +436,6 @@ def delHistoryEmpl(request):
         return Response('ok')
     else:
         return Response('not found')
-
 @api_view(['POST'])
 def changePasswordFreelancer(request):
         user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
@@ -431,9 +448,9 @@ def changePasswordFreelancer(request):
                 return Response('ok')
             else:
                 return Response('wrong password')
-
 @api_view(['POST'])
 def changePassword(request):
+        print(request.data)
         user=RegisterUser.objects.filter(id=request.data['id']).first()
         print(user)
         password = request.data['password']
@@ -444,3 +461,30 @@ def changePassword(request):
                 return Response('ok')
             else:
                 return Response('wrong password')
+
+
+@api_view(['POST'])
+def FreePaymentCards(request):
+    free_id = request.data['free_id']
+    print(free_id)
+    cards = PaymentFreeMethod.objects.filter(free_id=free_id)
+    print(cards)
+    if cards:
+        return Response(PaymentFreeMethodSerial(
+            cards,many=True
+        ).data)
+    else:
+        return Response({'message': 'not found'})
+@api_view(['POST'])
+def clientPaymentCards(request):
+    client_id = request.data['client_id']
+    print(client_id)
+    cards = PaymentMethod.objects.filter(client_id=client_id)
+    print(cards)
+    if cards:
+        return Response(PaymentMethodSerial(
+            cards,many=True
+        ).data)
+    else:
+        return Response({'message': 'not found'})
+

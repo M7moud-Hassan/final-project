@@ -19,6 +19,7 @@ urlpatterns = [
     path('secondaryDetailsFree/', secondaryDetailsFree, name='secondary_detailsfree'),
     path('updateImageFreeUser/', updateImageFreeUser,name='update_image_freeuser'),
     path('freelancepayment/', PaymentFreelanceUser,name='freelancepayment'),
+    path('payment/', PaymentUser, name='payment'),
     path('getalltypesCertifications/',get_all_certification_type_serializer),
     path('add_history_employment/',add_history_employment),
     path('delEducation/',delEducation),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('delHistoryEmpl/',delHistoryEmpl),
     path('changePasswordFree/',changePasswordFreelancer, name='changePasswordFree'),
     path('changePassword/', changePassword, name='changePassword'),
-
+    path('freePaymentCards/',FreePaymentCards,name='freePaymentCards'),
+    path('clientPaymentCards/', clientPaymentCards, name='clientPaymentCards'),
 
 ]
