@@ -4,6 +4,8 @@ from django.db import models
 
 from authentication.models import Skills, RegisterFreelancer
 
+from authentication.models import RegisterUser
+
 
 # Create your models here.
 
@@ -21,7 +23,6 @@ class DisLike(models.Model):
     id = models.AutoField
     id_free = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
 
-
 class Job(models.Model):
     id = models.AutoField
     create_at = models.DateTimeField(default=datetime.now, blank=True)
@@ -34,3 +35,5 @@ class Job(models.Model):
     is_pyment = models.BooleanField(default=False)
     likes = models.ManyToManyField(LikeJob, blank=True)
     dislikes = models.ManyToManyField(DisLike, blank=True)
+    client_id = models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
+

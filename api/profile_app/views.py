@@ -367,7 +367,8 @@ def delEducation(request):
 @api_view(['POST'])
 def PaymentFreelanceUser(request):
     free_id=request.data['free_id']
-    user =RegisterFreelancer.objects.filter(id=1).first()
+    user =RegisterFreelancer.objects.filter(id=free_id).first()
+    print(user)
     if user:
         PaymentFreeMethod.objects.create(
         nameOnTheCard= request.data['nameOnTheCard'],
@@ -384,7 +385,34 @@ def PaymentFreelanceUser(request):
         return Response('ok')
     else:
         return Response('not added')
+
+
 @api_view(['POST'])
+def PaymentUser(request):
+    client_id=request.data['client_id']
+    user =RegisterUser.objects.filter(id=client_id).first()
+    print(user)
+    if user:
+        PaymentMethod.objects.create(
+        nameOnTheCard= request.data['nameOnTheCard'],
+        email = request.data['email'],
+        state = request.data['state'],
+        city = request.data['city'],
+        Zip_code = request.data['Zip_code'],
+        Expire_year = request.data['Expire_year'],
+        Expire_month = request.data['Expire_month'],
+        Credit_number = request.data['Credit_number'],
+        CVV = request.data['CVV'],
+        client_id=user
+        )
+        return Response('ok')
+    else:
+        return Response('not added')
+
+
+
+@api_view(['POST'])
+
 def delPortFilo(request):
     p=Portflio.objects.filter(id=request.data['id']).first()
     if p:
@@ -422,6 +450,7 @@ def changePasswordFreelancer(request):
                 return Response('wrong password')
 @api_view(['POST'])
 def changePassword(request):
+        print(request.data)
         user=RegisterUser.objects.filter(id=request.data['id']).first()
         print(user)
         password = request.data['password']
@@ -432,3 +461,30 @@ def changePassword(request):
                 return Response('ok')
             else:
                 return Response('wrong password')
+
+
+@api_view(['POST'])
+def FreePaymentCards(request):
+    free_id = request.data['free_id']
+    print(free_id)
+    cards = PaymentFreeMethod.objects.filter(free_id=free_id)
+    print(cards)
+    if cards:
+        return Response(PaymentFreeMethodSerial(
+            cards,many=True
+        ).data)
+    else:
+        return Response({'message': 'not found'})
+@api_view(['POST'])
+def clientPaymentCards(request):
+    client_id = request.data['client_id']
+    print(client_id)
+    cards = PaymentMethod.objects.filter(client_id=client_id)
+    print(cards)
+    if cards:
+        return Response(PaymentMethodSerial(
+            cards,many=True
+        ).data)
+    else:
+        return Response({'message': 'not found'})
+

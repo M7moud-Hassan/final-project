@@ -64,10 +64,10 @@ class PaymentMethod(models.Model):
     city =models.CharField(max_length=30)
     state = models.CharField(max_length=30)
     Zip_code = models.CharField(max_length=30)
-    Expire_year = models.IntegerField(4)
-    Expire_month = models.IntegerField(max_length=2)
-    Credit_number = models.IntegerField(16)
-    CVV = models.IntegerField(3)
+    Expire_year = models.CharField(max_length=4)
+    Expire_month = models.CharField(max_length=2)
+    Credit_number = models.CharField(max_length=16)
+    CVV = models.CharField(max_length=3)
     client_id = models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
 
 
