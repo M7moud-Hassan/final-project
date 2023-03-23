@@ -1,4 +1,5 @@
 import base64
+import json
 from datetime import datetime
 
 from django.shortcuts import render
@@ -101,17 +102,22 @@ def AddJobClient(request):
     client_id=request.data['client_id']
     user =RegisterUser.objects.filter(id=client_id).first()
     if user:
-        images = request.FILES.getlist('images')
+        images = request.FILES.getlist('images[]')
         Jobs = Job.objects.create(
             title= request.data['title'],
             cost = request.data['cost'],
             description = request.data['description'],
-            is_pyment = request.data['is_pyment'],
+            is_pyment = True if request.data['is_pyment']=='true' else False,
             client_id=user
         )
-        for img in images :
+        for img in images:
             jobImage = JobImages.objects.create(image=img)
-            Jobs.images.add(jobImage),
+            Jobs.images.add(jobImage)
+
+        for sk in request.data.getlist('skills[]'):
+            us=Skills.objects.filter(id=sk).first()
+            Jobs.skills.add(us)
+            Jobs.save()
         return Response('ok')
     else:
         return Response('not added')
