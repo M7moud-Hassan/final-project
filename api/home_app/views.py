@@ -37,7 +37,13 @@ def details_free_home(request):
         if certification:
             completeness = completeness + 25
         jobs = Job.objects.all()
-
+        skills_usr=list(user.skills.values_list('name', flat=True))
+        jobs_send=[]
+        for j in jobs:
+            jobs_skils=list(j.skills.values_list('name', flat=True))
+            ins=set(skills_usr) & set(jobs_skils)
+            if ins:
+                jobs_send.append(j)
         return Response({
             "fname": user.first_name,
             "lname": user.last_name,
@@ -45,7 +51,7 @@ def details_free_home(request):
             "image": user.user_image.url,
             "completeness": completeness,
             "date_now": today.strftime("%B %d, %Y"),
-            "jobs": JobSerializer(jobs, many=True).data
+            "jobs": JobSerializer(jobs_send, many=True).data
 
         })
     else:
@@ -147,7 +153,7 @@ def jobDetails(request):
         for p in  job.Proposals.all():
             proposals.append({
                 "id":p.id,
-                "name":f'${p.first_name} ${p.last_name}',
+                "name":f'{p.first_name} {p.last_name}',
                 "image":p.user_image.url
             })
         numlikes=len(job.likes.all())
@@ -165,4 +171,49 @@ def jobDetails(request):
         })
     else:
         return  Response('not found')
+
+@api_view(['POST'])
+def search_jobs(request):
+    word=request.data['word']
+    words = word.split()
+    jobs=Job.objects.all()
+    job_send=[]
+    for j in jobs:
+        for w in words:
+            if w in j.title or w in j.description or w in list(j.skills.values_list('name', flat=True)):
+                job_send.append(j)
+    return Response(JobSerializer(job_send,many=True).data)
+@api_view(['POST'])
+def All_of_these_words(request):
+    word=request.data['word']
+    words = word.split()
+    jobs=Job.objects.all()
+    job_send=[]
+    for j in jobs:
+        title = j.title.split()
+        des=j.description.split()
+        if all(wor in title for wor in words) or all(wor in des for wor in words):
+            job_send.append(j)
+    return Response(JobSerializer(job_send,many=True).data)
+@api_view(['POST'])
+def The_exact_phrase(request):
+    word = request.data['word']
+    jobs = Job.objects.all()
+    job_send = []
+    for j in jobs:
+        if word in j.title or word in j.description:
+            job_send.append(j)
+    return Response(JobSerializer(job_send, many=True).data)
+
+@api_view(['POST'])
+def Skills_Search(request):
+    word = request.data['word']
+    words = word.split()
+    jobs = Job.objects.all()
+    job_send = []
+    for j in jobs:
+        for w in words:
+            if  w in list(j.skills.values_list('name', flat=True)):
+                job_send.append(j)
+    return Response(JobSerializer(job_send, many=True).data)
 
