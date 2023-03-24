@@ -10,4 +10,5 @@ urlpatterns = [
     path('removeDislike_job/',removeDislike_job),
     path('JobClient/',AddJobClient,name='JobClient'),
     path('latestJobs/',clientLatestJobs,name='latestJobs'),
+    path('jobDetails/',jobDetails,name='jobDetails'),
 ]
