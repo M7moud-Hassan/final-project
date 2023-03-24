@@ -37,3 +37,5 @@ class Job(models.Model):
     dislikes = models.ManyToManyField(DisLike, blank=True)
     client_id = models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
 
+
+
