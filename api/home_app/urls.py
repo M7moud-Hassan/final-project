@@ -14,4 +14,6 @@ urlpatterns = [
     path('The_exact_phrase/',The_exact_phrase),
     path('Skills_Search/',Skills_Search),
     path('latestJobs/',clientLatestJobs,name='latestJobs'),
+    path('jobDetails/',jobDetails),
+    path('add_applay/',add_applay)
 ]
