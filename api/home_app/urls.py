@@ -13,4 +13,5 @@ urlpatterns = [
     path('All_of_these_words/',All_of_these_words),
     path('The_exact_phrase/',The_exact_phrase),
     path('Skills_Search/',Skills_Search),
+    path('latestJobs/',clientLatestJobs,name='latestJobs'),
 ]

@@ -132,7 +132,6 @@ def AddJobClient(request):
         return Response('not added')
 
 
-
 @api_view(['POST'])
 def clientLatestJobs(request):
     client=RegisterUser.objects.filter(id=request.data['client_id']).first()
@@ -219,3 +218,5 @@ def Skills_Search(request):
             if  w in list(j.skills.values_list('name', flat=True)):
                 job_send.append(j)
     return Response(JobSerializer(job_send, many=True).data)
+
+
