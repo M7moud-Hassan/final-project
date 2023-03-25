@@ -1,11 +1,3 @@
-import base64
-import json
-from datetime import datetime
-
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-from django.http import JsonResponse
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -218,5 +210,4 @@ def Skills_Search(request):
             if  w in list(j.skills.values_list('name', flat=True)):
                 job_send.append(j)
     return Response(JobSerializer(job_send, many=True).data)
-
 

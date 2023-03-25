@@ -23,6 +23,7 @@ class DisLike(models.Model):
     id = models.AutoField
     id_free = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
 
+
 class Job(models.Model):
     id = models.AutoField
     create_at = models.DateTimeField(default=datetime.now, blank=True)
@@ -38,4 +39,11 @@ class Job(models.Model):
     client_id = models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
 
 
+class notificationsClient(models.Model):
+    user_sender = models.ForeignKey(RegisterFreelancer, null=True, blank=True, related_name='user_sender',
+                                    on_delete=models.CASCADE)
+    user_revoker = models.ForeignKey(RegisterUser, null=True, blank=True, related_name='user_revoker',
+                                     on_delete=models.CASCADE)
+    status = models.CharField(max_length=264, null=True, blank=True, default="unread")
+    type_of_notification = models.CharField(max_length=264, null=True, blank=True)
 
