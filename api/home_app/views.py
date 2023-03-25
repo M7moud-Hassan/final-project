@@ -1,14 +1,9 @@
-import base64
-import json
-from datetime import datetime
-
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from authentication.models import Skills, RegisterFreelancer
-from home_app.models import Job, LikeJob, DisLike
-from home_app.serlializers import JobSerializer
+from home_app.models import Job, LikeJob, DisLike, notificationsClient, SendApply, ImagesSendApply
+from home_app.serlializers import JobSerializer, NotificationClientSerializer
 from profile_app.models import Portflio, Certification
 # Create your views here.
 from datetime import date
@@ -128,8 +123,6 @@ def AddJobClient(request):
     else:
         return Response('not added')
 
-
-
 @api_view(['POST'])
 def clientLatestJobs(request):
     client=RegisterUser.objects.filter(id=request.data['client_id']).first()
@@ -216,4 +209,35 @@ def Skills_Search(request):
             if  w in list(j.skills.values_list('name', flat=True)):
                 job_send.append(j)
     return Response(JobSerializer(job_send, many=True).data)
+
+@api_view(['POST'])
+def getnotificationsClient(request):
+    user=RegisterUser.objects.filter(id=request.data['id']).first()
+    if user:
+        notifications=notificationsClient.objects.filter(user_revoker=user)
+        return  Response(NotificationClientSerializer(notifications,many=True).data)
+    else:
+        return Response({'not found'})
+
+
+@api_view(['POST'])
+def add_applay(request):
+    free=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    job =Job.objects.filter(id=request.data['id_job']).first()
+    if free and job:
+       send= SendApply.objects.create(
+           free=free,
+           job=job,
+           cover=request.data['cover'],
+           cost_re=request.data['cost_re'],
+           cost_comp=request.data['cost_comp']
+       )
+       images = request.FILES.getlist('images[]')
+       for img in images:
+            jobImage = ImagesSendApply.objects.create(image=img)
+            send.images.add(jobImage)
+            job.Proposals.add(free)
+       return Response('ok')
+    else:
+        return Response("not found")
 

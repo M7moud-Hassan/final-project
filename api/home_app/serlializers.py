@@ -30,3 +30,7 @@ class JobSerializer(serializers.ModelSerializer):
         model=Job
         fields = '__all__'
 
+class NotificationClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = notificationsClient
+        fields = '__all__'

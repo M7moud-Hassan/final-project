@@ -23,6 +23,7 @@ class DisLike(models.Model):
     id = models.AutoField
     id_free = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
 
+
 class Job(models.Model):
     id = models.AutoField
     create_at = models.DateTimeField(default=datetime.now, blank=True)
@@ -36,4 +37,27 @@ class Job(models.Model):
     likes = models.ManyToManyField(LikeJob, blank=True)
     dislikes = models.ManyToManyField(DisLike, blank=True)
     client_id = models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
+
+
+class notificationsClient(models.Model):
+    user_sender = models.ForeignKey(RegisterFreelancer, null=True, blank=True, related_name='user_sender',
+                                    on_delete=models.CASCADE)
+    user_revoker = models.ForeignKey(RegisterUser, null=True, blank=True, related_name='user_revoker',
+                                     on_delete=models.CASCADE)
+    status = models.CharField(max_length=264, null=True, blank=True, default="unread")
+    type_of_notification = models.CharField(max_length=264, null=True, blank=True)
+
+class ImagesSendApply(models.Model):
+    id=models.AutoField
+    image=models.ImageField(upload_to="images/applay_images/")
+
+class SendApply(models.Model):
+    free=models.ForeignKey(RegisterFreelancer,
+                                    on_delete=models.CASCADE)
+    cover=models.CharField(max_length=20000)
+    job=models.ForeignKey(Job,
+                                    on_delete=models.CASCADE)
+    images=models.ManyToManyField(ImagesSendApply,blank=True)
+    cost_re=models.DecimalField(max_digits=10,decimal_places=2)
+    cost_comp=models.DecimalField(max_digits=10,decimal_places=2)
 
