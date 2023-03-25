@@ -1,16 +1,15 @@
-"""
-WSGI config for api project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/4.1/howto/deployment/wsgi/
-"""
-
 import os
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
 
-from django.core.wsgi import get_wsgi_application
+from django.urls import path
+from django.core.asgi import get_asgi_application
+os.environ.setdefault('DJANGO_SETTINGS_MODULE','api.settings')
+from home_app.consumers import NotificationConsumer
+application = ProtocolTypeRouter({
+    "http": get_asgi_application(),
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'api.settings')
+    "websocket": AuthMiddlewareStack(
+        URLRouter([path('ws/notifications/', NotificationConsumer.as_asgi())]))
 
-application = get_wsgi_application()
+})
