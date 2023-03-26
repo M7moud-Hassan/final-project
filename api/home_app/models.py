@@ -62,6 +62,7 @@ class SendApply(models.Model):
     images = models.ManyToManyField(ImagesSendApply, blank=True)
     cost_re = models.DecimalField(max_digits=10, decimal_places=2)
     cost_comp = models.DecimalField(max_digits=10, decimal_places=2)
+    is_hire=models.BooleanField(default=False)
 
 
 class Hires(models.Model):
@@ -71,3 +72,6 @@ class Hires(models.Model):
                              on_delete=models.CASCADE)
     job = models.ForeignKey(Job,
                             on_delete=models.CASCADE)
+    cost=models.DecimalField(decimal_places=2,max_digits=10)
+    is_finish=models.BooleanField(default=False)
+    is_payment=models.BooleanField(default=False)

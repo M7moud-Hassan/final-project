@@ -21,6 +21,12 @@ urlpatterns = [
     path('add_applay/',add_applay),
     path('getnotificationsClient/',getnotificationsClient),
     path('makeNotificationClientRead/',makeNotificationClientRead),
-    path('deletNotificationClient/',deletNotificationClient)
+    path('deletNotificationClient/',deletNotificationClient),
+    path('deletNotificationClient/',deletNotificationClient),
+    path('get_jobs_proposals/',get_jobs_proposals),
+    path('jobs_hire/',jobs_hire),
+    path('job_cover/',job_cover),
+    path('job_hire_de/',job_hire_de),
+    path('finish_job/',finish_job),
 
 ]
