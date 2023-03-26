@@ -15,5 +15,8 @@ urlpatterns = [
     path('Skills_Search/',Skills_Search),
     path('latestJobs/',clientLatestJobs,name='latestJobs'),
     path('jobDetails/',jobDetails),
-    path('add_applay/',add_applay)
+    path('add_applay/',add_applay),
+    path('getnotificationsClient/',getnotificationsClient),
+    path('makeNotificationClientRead/',makeNotificationClientRead),
+    path('deletNotificationClient/',deletNotificationClient)
 ]

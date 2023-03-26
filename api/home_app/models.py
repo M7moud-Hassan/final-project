@@ -47,17 +47,27 @@ class notificationsClient(models.Model):
     status = models.CharField(max_length=264, null=True, blank=True, default="unread")
     type_of_notification = models.CharField(max_length=264, null=True, blank=True)
 
+
 class ImagesSendApply(models.Model):
-    id=models.AutoField
-    image=models.ImageField(upload_to="images/applay_images/")
+    id = models.AutoField
+    image = models.ImageField(upload_to="images/applay_images/")
+
 
 class SendApply(models.Model):
-    free=models.ForeignKey(RegisterFreelancer,
-                                    on_delete=models.CASCADE)
-    cover=models.CharField(max_length=20000)
-    job=models.ForeignKey(Job,
-                                    on_delete=models.CASCADE)
-    images=models.ManyToManyField(ImagesSendApply,blank=True)
-    cost_re=models.DecimalField(max_digits=10,decimal_places=2)
-    cost_comp=models.DecimalField(max_digits=10,decimal_places=2)
+    free = models.ForeignKey(RegisterFreelancer,
+                             on_delete=models.CASCADE)
+    cover = models.CharField(max_length=20000)
+    job = models.ForeignKey(Job,
+                            on_delete=models.CASCADE)
+    images = models.ManyToManyField(ImagesSendApply, blank=True)
+    cost_re = models.DecimalField(max_digits=10, decimal_places=2)
+    cost_comp = models.DecimalField(max_digits=10, decimal_places=2)
 
+
+class Hires(models.Model):
+    client = models.ForeignKey(RegisterUser,
+                               on_delete=models.CASCADE)
+    free = models.ForeignKey(RegisterFreelancer,
+                             on_delete=models.CASCADE)
+    job = models.ForeignKey(Job,
+                            on_delete=models.CASCADE)
