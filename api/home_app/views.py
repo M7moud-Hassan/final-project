@@ -10,6 +10,7 @@ from datetime import date
 
 from authentication.models import RegisterUser
 from home_app.models import JobImages
+from profile_app.serlializers import portfiloSerialzer
 
 today = date.today()
 
@@ -321,3 +322,12 @@ def finish_job(request):
         return Response('ok')
     else:
         return Response("not found")
+
+@api_view(['POST'])
+def get_portfolio(request):
+    p=Portflio.objects.filter(id=request.data['id']).first()
+    if p:
+        return  Response(portfiloSerialzer(p).data)
+    else:
+        return Response("not found")
+

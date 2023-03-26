@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from authentication.models import Skills
+from profile_app.models import Portflio
 from .models import *
 
 class imageJobSerializer(serializers.ModelSerializer):
@@ -54,3 +55,4 @@ class HireSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hires
         fields = '__all__'
+

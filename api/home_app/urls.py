@@ -29,4 +29,6 @@ urlpatterns = [
     path('job_hire_de/',job_hire_de),
     path('finish_job/',finish_job),
 
+    path('get_portfolio/',get_portfolio)
+
 ]
