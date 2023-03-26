@@ -23,5 +23,6 @@ urlpatterns = [
     path('jobs_hire/',jobs_hire),
     path('job_cover/',job_cover),
     path('job_hire_de/',job_hire_de),
-    path('finish_job/',finish_job)
+    path('finish_job/',finish_job),
+    path('get_portfolio/',get_portfolio)
 ]
