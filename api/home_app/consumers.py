@@ -10,56 +10,61 @@ from home_app.serlializers import NotificationClientSerializer
 
 
 @database_sync_to_async
-def get_client(user_id):
-        return RegisterUser.objects.get(id=user_id)
-
-
-@database_sync_to_async
 def get_free(user_id):
+    try:
         return RegisterFreelancer.objects.get(id=user_id)
-
+    except:
+        return AnonymousUser()@database_sync_to_async
 
 @database_sync_to_async
-def create_notification(receiver, sender, typeof, status="unread"):
-    notification_to_create = notificationsClient.objects.create(
-        user_revoker=receiver,
-        user_sender=sender,
-        type_of_notification=typeof,
-        status=status
-    )
-    return NotificationClientSerializer(notification_to_create).data
-
-
+def get_client(user_id):
+    try:
+        return RegisterUser.objects.get(id=user_id)
+    except:
+        return AnonymousUser()@database_sync_to_async
+@database_sync_to_async
+def create_notification(user_sender,receiver,typeof="task_created",status="unread"):
+    notification_to_create=notificationsClient.objects.create(status=status,user_sender=user_sender,user_revoker=receiver,type_of_notification=typeof)
+    return (NotificationClientSerializer(notification_to_create).data)
 class NotificationConsumer(AsyncWebsocketConsumer):
-    async def websocket_connect(self, event):
+    async def websocket_connect(self,event):
+        print(self.scope)
         await self.accept()
-        self.room_name = 'notifications'
-        self.room_group_name = 'clients'
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        #self.send({
-        #    "type": "websocket.send",
-        #    "text": "room made"
-       # })
+        await self.send(json.dumps({
+            "type":"websocket.send",
+            "text":"hello world"
+        }))
+        self.room_name='test_consumer'
+        self.room_group_name='test_consumer_group'
+        await self.channel_layer.group_add(self.room_group_name,self.channel_name)
+        self.send({
+            "type":"websocket.send",
+            "text":"room made"
+        })
+    async def websocket_receive(self,event):
 
-    async def websocket_receive(self, event):
         sen=json.loads(event['text'])
-        sender_ = sen['sender']
-        sender = await get_free(int(sender_))
-        recieve=await get_client(int(sen['recieve']))
-        get_of = await create_notification(recieve,sender,f'freelancer {sender} {sen["payload"]}')
-        self.room_group_name = 'clients'
-        channel_layer = get_channel_layer()
+
+
+        free=await get_free(int(sen['data']['sender']))
+        rec=await get_client(int(sen['data']['recieve']))
+
+        get_of=await create_notification(free,rec,f'{free} {sen["data"]["payload"]}')
+        self.room_group_name='test_consumer_group'
+        channel_layer=get_channel_layer()
         await (channel_layer.group_send)(
             self.room_group_name,
-            get_of)
-
-    async def websocket_disconnect(self, event):
-        print('disconnect', event)
-
-    async def send_notification(self, event):
+            {
+                "type":"send_notification",
+                "value":json.dumps(get_of)
+            })
+        print('receive',event)
+    async def websocket_disconnect(self,event):
+        print('disconnect',event)
+    async def send_notification(self,event):
         await self.send(json.dumps({
-            "type": "websocket.send",
-            "data": event
+            "type":"websocket.send",
+            "data":event
         }))
         print('I am here')
         print(event)

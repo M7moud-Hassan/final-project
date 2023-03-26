@@ -9,18 +9,18 @@ urlpatterns = [
     path('removelike_job/',removelike_job),
     path('removeDislike_job/',removeDislike_job),
     path('JobClient/',AddJobClient,name='JobClient'),
-
-
     path('latestJobs/',clientLatestJobs,name='latestJobs'),
     path('jobDetails/',jobDetails,name='jobDetails'),
-
     path('job_search/',search_jobs),
     path('All_of_these_words/',All_of_these_words),
     path('The_exact_phrase/',The_exact_phrase),
     path('Skills_Search/',Skills_Search),
-
-
     path('latestJobs/',clientLatestJobs,name='latestJobs'),
     path('add_applay/',add_applay)
+    path('jobDetails/',jobDetails),
+    path('add_applay/',add_applay),
+    path('getnotificationsClient/',getnotificationsClient),
+    path('makeNotificationClientRead/',makeNotificationClientRead),
+    path('deletNotificationClient/',deletNotificationClient)
 
 ]

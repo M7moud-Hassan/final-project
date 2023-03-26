@@ -39,6 +39,10 @@ def details_free_home(request):
             ins=set(skills_usr) & set(jobs_skils)
             if ins:
                 jobs_send.append(j)
+        my_applay=SendApply.objects.filter(free=user)
+        jobsAllay=[]
+        for j in my_applay:
+            jobsAllay.append(j.job.id)
         return Response({
             "fname": user.first_name,
             "lname": user.last_name,
@@ -46,8 +50,8 @@ def details_free_home(request):
             "image": user.user_image.url,
             "completeness": completeness,
             "date_now": today.strftime("%B %d, %Y"),
-            "jobs": JobSerializer(jobs_send, many=True).data
-
+            "jobs": JobSerializer(jobs_send, many=True).data,
+            "jobsAllay":jobsAllay
         })
     else:
         return Response('not found')
@@ -152,6 +156,7 @@ def jobDetails(request):
         numlikes=len(job.likes.all())
         numDislike=len(job.dislikes.all())
         return Response({
+
             "title":job.title,
             "create_at":job.create_at,
             'cost':job.cost,
@@ -160,7 +165,8 @@ def jobDetails(request):
             "skills":skills,
             "proposals":proposals,
             "numlikes":numlikes,
-            "numDislike":numDislike
+            "numDislike":numDislike,
+            'client_id': job.client_id.id,
         })
     else:
         return  Response('not found')
@@ -241,3 +247,24 @@ def add_applay(request):
     else:
         return Response("not found")
 
+@api_view(['POST'])
+def makeNotificationClientRead(request):
+    user=RegisterUser.objects.filter(id=request.data['id']).first()
+    if user:
+        nts=notificationsClient.objects.filter(user_revoker=user)
+        for n in nts:
+            n.status="read"
+            n.save()
+        notifications = notificationsClient.objects.filter(user_revoker=user)
+        return Response(NotificationClientSerializer(notifications, many=True).data)
+    else:
+        return Response("not found")
+
+@api_view(['POST'])
+def deletNotificationClient(request):
+    no=notificationsClient.objects.filter(id=request.data['id']).first()
+    if no:
+        no.delete()
+        return Response('ok')
+    else:
+        return Response("not found")
