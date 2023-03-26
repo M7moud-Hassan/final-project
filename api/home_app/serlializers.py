@@ -34,3 +34,23 @@ class NotificationClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = notificationsClient
         fields = '__all__'
+class ImagesSendApplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImagesSendApply
+        fields = '__all__'
+
+class ApplaySerializer(serializers.ModelSerializer):
+    images = ImagesSendApplySerializer(read_only=True, many=True)
+    class Meta:
+        model = SendApply
+        fields = '__all__'
+class RegisterUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegisterUser
+        fields = '__all__'
+
+class HireSerializer(serializers.ModelSerializer):
+    client=RegisterUserSerializer(read_only=True)
+    class Meta:
+        model = Hires
+        fields = '__all__'

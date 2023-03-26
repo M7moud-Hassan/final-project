@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from authentication.models import Skills, RegisterFreelancer
-from home_app.models import Job, LikeJob, DisLike, notificationsClient, SendApply, ImagesSendApply
-from home_app.serlializers import JobSerializer, NotificationClientSerializer
+from home_app.models import Job, LikeJob, DisLike, notificationsClient, SendApply, ImagesSendApply, Hires
+from home_app.serlializers import JobSerializer, NotificationClientSerializer, ApplaySerializer, HireSerializer
 from profile_app.models import Portflio, Certification
 # Create your views here.
 from datetime import date
@@ -265,6 +265,59 @@ def deletNotificationClient(request):
     no=notificationsClient.objects.filter(id=request.data['id']).first()
     if no:
         no.delete()
+        return Response('ok')
+    else:
+        return Response("not found")
+
+@api_view(['POST'])
+def get_jobs_proposals(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        applayes=SendApply.objects.filter(free=user)
+        jobs=[]
+        for app in applayes:
+            if not app.is_hire:
+                jobs.append(app.job)
+        return Response(JobSerializer(jobs,many=True).data)
+    else:
+        return Response('not found')
+
+@api_view(['POST'])
+def jobs_hire(request):
+    user = RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        hires = Hires.objects.filter(free=user)
+        jobs = []
+        for h in hires:
+            if not h.is_payment:
+                jobs.append(h.job)
+        return Response(JobSerializer(jobs, many=True).data)
+    else:
+        return Response('not found')
+@api_view(['POST'])
+def job_cover(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    job=Job.objects.filter(id=request.data['id_job']).first()
+    if user and job:
+        cover=SendApply.objects.filter(free=user,job=job).first()
+        return Response(ApplaySerializer(cover).data)
+    else:
+        return  Response("not found")
+@api_view(['POST'])
+def job_hire_de(request):
+    user = RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    job = Job.objects.filter(id=request.data['id_job']).first()
+    if user and job:
+        hire=Hires.objects.filter(free=user,job=job).first()
+        return Response(HireSerializer(hire).data)
+    else:
+        return  Response("not found")
+@api_view(['POST'])
+def finish_job(request):
+    hire=Hires.objects.filter(id=request.data['id']).first()
+    if hire:
+        hire.is_finish=True
+        hire.save()
         return Response('ok')
     else:
         return Response("not found")
