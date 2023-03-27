@@ -9,4 +9,6 @@ admin.site.register(notificationsClient)
 admin.site.register(SendApply)
 admin.site.register(ImagesSendApply)
 admin.site.register(Hires)
+admin.site.register(ReviewAndRate)
+admin.site.register(notificationsFree)
 
