@@ -90,7 +90,12 @@ def details_freelancer(request):
         reviews=ReviewAndRate.objects.filter(free=user)
         for r in reviews:
             numRate+=r.rate
-        rate=numRate/len(reviews)
+        n=len(reviews)
+        rate=0
+        if(n!=0):
+            rate=numRate/len(reviews)
+        else:
+            rate=0
         return  Response({
             "numReview":len(reviews),
             "rate":rate,
