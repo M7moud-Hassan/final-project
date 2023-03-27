@@ -35,6 +35,11 @@ class NotificationClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = notificationsClient
         fields = '__all__'
+
+class NotificationFreeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = notificationsFree
+        fields = '__all__'
 class ImagesSendApplySerializer(serializers.ModelSerializer):
     class Meta:
         model = ImagesSendApply
@@ -50,8 +55,14 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         model = RegisterUser
         fields = '__all__'
 
+class RegisterFreelancerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegisterFreelancer
+        fields = ['id','first_name','last_name','user_image','job_title']
 class HireSerializer(serializers.ModelSerializer):
     client=RegisterUserSerializer(read_only=True)
+    job=JobSerializer(read_only=True)
+    free=RegisterFreelancerSerializer(read_only=True)
     class Meta:
         model = Hires
         fields = '__all__'

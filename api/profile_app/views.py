@@ -5,6 +5,7 @@ from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from home_app.models import ReviewAndRate
 from .models import *
 from .serlializers import *
 from authentication.models import RegisterFreelancer, Skills, Services, Experience, Education
@@ -85,8 +86,15 @@ def details_freelancer(request):
             })
         certification = Certification.objects.filter(certification_user_freelancer=user)
         employmentHistorys=Employment_History.objects.filter(id_free=user)
-
+        numRate=0
+        reviews=ReviewAndRate.objects.filter(free=user)
+        for r in reviews:
+            numRate+=r.rate
+        rate=numRate/len(reviews)
         return  Response({
+            "numReview":len(reviews),
+            "rate":rate,
+            "reviews":ReviewAndRateSerial(reviews,many=True).data,
             "name":f'{user.first_name} {user.last_name}',
             "address":user.city,
             "jobtitle": user.job_title,
@@ -205,6 +213,7 @@ def clientDetails(request):
         image = ''
         if user.image:
             image = base64.b64encode(user.image.read()).decode('utf-8')
+        history_work = WorkHistory.objects.filter(work_history_client=user)
         return  Response({
             "name":f'{fname} {lname}',
             "phone":phone,
@@ -215,6 +224,7 @@ def clientDetails(request):
             "street":user.street,
             "city":user.city,
             "state":user.state,
+            "history_work":History_workSerialzer(history_work,many=True).data,
             "postal_code":user.postal_code,
             "is_payments":True if PaymentMethod.objects.filter(client_id=id) else False
         })

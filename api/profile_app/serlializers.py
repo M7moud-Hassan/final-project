@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from authentication.models import Experience
+from home_app.models import ReviewAndRate
 from .models import *
 
 class ImagesProjectSerializer(serializers.ModelSerializer):
@@ -61,4 +62,8 @@ class PaymentFreeMethodSerial(serializers.ModelSerializer):
 class PaymentMethodSerial(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod
+        fields = '__all__'
+class ReviewAndRateSerial(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewAndRate
         fields = '__all__'

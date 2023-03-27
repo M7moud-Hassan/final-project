@@ -74,4 +74,5 @@ class RegisterUser(models.Model):
     city=models.CharField(max_length=50, null=True, )
     state=models.CharField(max_length=50, null=True, )
     postal_code=models.CharField(max_length=20, null=True, )
-
+    def __str__(self):
+        return  f'{self.fname} {self.lname}'
