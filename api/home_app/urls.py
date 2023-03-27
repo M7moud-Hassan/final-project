@@ -24,5 +24,12 @@ urlpatterns = [
     path('job_cover/',job_cover),
     path('job_hire_de/',job_hire_de),
     path('finish_job/',finish_job),
-    path('get_portfolio/',get_portfolio)
+    path('get_portfolio/',get_portfolio),
+    path('hire/',hire),
+    path('get_jobs_hire_client/',get_jobs_hire_client),
+    path('get_jobs_finish_client/',get_jobs_finish_client),
+    path('addReview/',addReview),
+    path('getnotificationsFree/',getnotificationsFree),
+    path('makeNotificationFreetRead/',makeNotificationFreetRead),
+    path('deletNotificationFree/',deletNotificationFree)
 ]

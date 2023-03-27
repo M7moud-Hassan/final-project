@@ -18,9 +18,12 @@ class Employment_History(models.Model):
 class WorkHistory(models.Model):
     id = models.AutoField
     work_history_freelancer = models.ForeignKey(RegisterFreelancer, on_delete=models.CASCADE)
+    work_history_client=models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
     location = models.CharField(max_length=100)
-    date = models.DateField()
-    cost = models.DecimalField(decimal_places=5, max_digits=10)
+    date = models.DateField(auto_now=True,blank=True)
+    cost = models.DecimalField(decimal_places=2, max_digits=10)
+
+
 
 
 class ImagesProject(models.Model):

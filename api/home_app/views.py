@@ -2,9 +2,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from authentication.models import Skills, RegisterFreelancer
-from home_app.models import Job, LikeJob, DisLike, notificationsClient, SendApply, ImagesSendApply, Hires
-from home_app.serlializers import JobSerializer, NotificationClientSerializer, ApplaySerializer, HireSerializer
-from profile_app.models import Portflio, Certification
+from home_app.models import Job, LikeJob, DisLike, notificationsClient, SendApply, ImagesSendApply, Hires, \
+    ReviewAndRate, notificationsFree
+from home_app.serlializers import JobSerializer, NotificationClientSerializer, ApplaySerializer, HireSerializer, \
+    NotificationFreeSerializer
+from profile_app.models import Portflio, Certification, WorkHistory
 # Create your views here.
 from datetime import date
 
@@ -36,10 +38,11 @@ def details_free_home(request):
         skills_usr=list(user.skills.values_list('name', flat=True))
         jobs_send=[]
         for j in jobs:
-            jobs_skils=list(j.skills.values_list('name', flat=True))
-            ins=set(skills_usr) & set(jobs_skils)
-            if ins:
-                jobs_send.append(j)
+            if not j.is_hire:
+                jobs_skils=list(j.skills.values_list('name', flat=True))
+                ins=set(skills_usr) & set(jobs_skils)
+                if ins:
+                    jobs_send.append(j)
         my_applay=SendApply.objects.filter(free=user)
         jobsAllay=[]
         for j in my_applay:
@@ -134,7 +137,11 @@ def clientLatestJobs(request):
     client=RegisterUser.objects.filter(id=request.data['client_id']).first()
     if client:
         jobs=Job.objects.filter(client_id=client)
-        return  Response(JobSerializer(jobs,many=True).data)
+        job_sen=[]
+        for j in jobs:
+            if not j.is_hire:
+                job_sen.append(j)
+        return  Response(JobSerializer(job_sen,many=True).data)
     else:
         return Response('not found')
 
@@ -180,9 +187,10 @@ def search_jobs(request):
     jobs=Job.objects.all()
     job_send=[]
     for j in jobs:
-        for w in words:
-            if w in j.title or w in j.description or w in list(j.skills.values_list('name', flat=True)):
-                job_send.append(j)
+        if not j.is_hire:
+            for w in words:
+                if w in j.title or w in j.description or w in list(j.skills.values_list('name', flat=True)):
+                    job_send.append(j)
     return Response(JobSerializer(job_send,many=True).data)
 @api_view(['POST'])
 def All_of_these_words(request):
@@ -191,10 +199,11 @@ def All_of_these_words(request):
     jobs=Job.objects.all()
     job_send=[]
     for j in jobs:
-        title = j.title.split()
-        des=j.description.split()
-        if all(wor in title for wor in words) or all(wor in des for wor in words):
-            job_send.append(j)
+        if not j.is_hire:
+            title = j.title.split()
+            des=j.description.split()
+            if all(wor in title for wor in words) or all(wor in des for wor in words):
+                job_send.append(j)
     return Response(JobSerializer(job_send,many=True).data)
 @api_view(['POST'])
 def The_exact_phrase(request):
@@ -202,8 +211,9 @@ def The_exact_phrase(request):
     jobs = Job.objects.all()
     job_send = []
     for j in jobs:
-        if word in j.title or word in j.description:
-            job_send.append(j)
+        if not j.is_hire:
+            if word in j.title or word in j.description:
+                job_send.append(j)
     return Response(JobSerializer(job_send, many=True).data)
 
 @api_view(['POST'])
@@ -213,9 +223,10 @@ def Skills_Search(request):
     jobs = Job.objects.all()
     job_send = []
     for j in jobs:
-        for w in words:
-            if  w in list(j.skills.values_list('name', flat=True)):
-                job_send.append(j)
+        if not j.is_hire:
+            for w in words:
+                if  w in list(j.skills.values_list('name', flat=True)):
+                    job_send.append(j)
     return Response(JobSerializer(job_send, many=True).data)
 
 @api_view(['POST'])
@@ -224,6 +235,15 @@ def getnotificationsClient(request):
     if user:
         notifications=notificationsClient.objects.filter(user_revoker=user)
         return  Response(NotificationClientSerializer(notifications,many=True).data)
+    else:
+        return Response({'not found'})
+
+@api_view(['POST'])
+def getnotificationsFree(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        notifications=notificationsFree.objects.filter(user_revoker=user)
+        return  Response(NotificationFreeSerializer(notifications,many=True).data)
     else:
         return Response({'not found'})
 
@@ -262,8 +282,30 @@ def makeNotificationClientRead(request):
         return Response("not found")
 
 @api_view(['POST'])
+def makeNotificationFreetRead(request):
+    user=RegisterFreelancer.objects.filter(id=request.data['id']).first()
+    if user:
+        nts=notificationsFree.objects.filter(user_revoker=user)
+        for n in nts:
+            n.status="read"
+            n.save()
+        notifications = notificationsFree.objects.filter(user_revoker=user)
+        return Response(NotificationFreeSerializer(notifications, many=True).data)
+    else:
+        return Response("not found")
+
+@api_view(['POST'])
 def deletNotificationClient(request):
     no=notificationsClient.objects.filter(id=request.data['id']).first()
+    if no:
+        no.delete()
+        return Response('ok')
+    else:
+        return Response("not found")
+
+@api_view(['POST'])
+def deletNotificationFree(request):
+    no=notificationsFree.objects.filter(id=request.data['id']).first()
     if no:
         no.delete()
         return Response('ok')
@@ -329,3 +371,49 @@ def get_portfolio(request):
         return  Response(portfiloSerialzer(p).data)
     else:
         return Response("not found")
+
+@api_view(['POST'])
+def hire(request):
+    user=RegisterUser.objects.filter(id=request.data['user']).first()
+    free=RegisterFreelancer.objects.filter(id=request.data['free']).first()
+    app=SendApply.objects.filter(id=request.data['job']).first()
+    job=Job.objects.filter(id=app.job.id).first()
+    cost=request.data['cost']
+    if user and free and job:
+        hire=Hires.objects.create(client=user,free=free,job=job,cost=cost)
+        job.is_hire=True
+        job.save()
+        app.is_hire=True
+        app.save()
+        return Response('ok')
+    else:
+        return Response("not found")
+@api_view(['POST'])
+def get_jobs_hire_client(requests):
+    user=RegisterUser.objects.filter(id=requests.data['id']).first()
+    if user:
+        hires=Hires.objects.filter(client=user,is_finish=False)
+        return  Response(HireSerializer(hires,many=True).data)
+    else:
+        return Response("not found")
+@api_view(['POST'])
+def get_jobs_finish_client(requests):
+    user = RegisterUser.objects.filter(id=requests.data['id']).first()
+    if user:
+        hires = Hires.objects.filter(client=user, is_finish=True,is_payment=False)
+        return Response(HireSerializer(hires, many=True).data)
+    else:
+        return Response("not found")
+@api_view(['POST'])
+def addReview(requests):
+    user = RegisterFreelancer.objects.filter(id=requests.data['id']).first()
+    client =RegisterUser.objects.filter(id=requests.data['client']).first()
+    if user and client:
+        ReviewAndRate.objects.create(free=user,review=requests.data['review'],rate=requests.data['rate'])
+        h= Hires.objects.filter(id=requests.data['job_id']).first()
+        h.is_payment=True
+        h.save()
+        WorkHistory.objects.create(work_history_client=client,work_history_freelancer=user,location=h.job.title,cost=h.cost)
+        return Response('ok')
+    else:
+        return Response('not found')

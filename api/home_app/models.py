@@ -36,6 +36,7 @@ class Job(models.Model):
     is_pyment = models.BooleanField(default=False)
     likes = models.ManyToManyField(LikeJob, blank=True)
     dislikes = models.ManyToManyField(DisLike, blank=True)
+    is_hire=models.BooleanField(default=False)
     client_id = models.ForeignKey(RegisterUser, on_delete=models.CASCADE)
 
 
@@ -43,6 +44,14 @@ class notificationsClient(models.Model):
     user_sender = models.ForeignKey(RegisterFreelancer, null=True, blank=True, related_name='user_sender',
                                     on_delete=models.CASCADE)
     user_revoker = models.ForeignKey(RegisterUser, null=True, blank=True, related_name='user_revoker',
+                                     on_delete=models.CASCADE)
+    status = models.CharField(max_length=264, null=True, blank=True, default="unread")
+    type_of_notification = models.CharField(max_length=264, null=True, blank=True)
+
+class notificationsFree(models.Model):
+    user_sender = models.ForeignKey(RegisterUser, null=True, blank=True, related_name='user_sender',
+                                    on_delete=models.CASCADE)
+    user_revoker = models.ForeignKey(RegisterFreelancer, null=True, blank=True, related_name='user_revoker',
                                      on_delete=models.CASCADE)
     status = models.CharField(max_length=264, null=True, blank=True, default="unread")
     type_of_notification = models.CharField(max_length=264, null=True, blank=True)
@@ -75,3 +84,11 @@ class Hires(models.Model):
     cost=models.DecimalField(decimal_places=2,max_digits=10)
     is_finish=models.BooleanField(default=False)
     is_payment=models.BooleanField(default=False)
+
+
+class ReviewAndRate(models.Model):
+    id=models.AutoField
+    free = models.ForeignKey(RegisterFreelancer,
+                             on_delete=models.CASCADE)
+    rate=models.IntegerField(max_length=5)
+    review=models.CharField(max_length=5000)
