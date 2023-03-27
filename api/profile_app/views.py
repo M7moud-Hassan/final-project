@@ -496,5 +496,5 @@ def clientPaymentCards(request):
             cards,many=True
         ).data)
     else:
-        return Response({'message': 'not found'})
+        return Response('not found')
 
