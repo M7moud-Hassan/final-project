@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from authentication.models import Skills, RegisterFreelancer
 from home_app.models import Job, LikeJob, DisLike, notificationsClient, SendApply, ImagesSendApply, Hires, \
     ReviewAndRate, notificationsFree
-from home_app.serlializers import JobSerializer, NotificationClientSerializer, ApplaySerializer, HireSerializer, \
+from home_app.serializers import JobSerializer, NotificationClientSerializer, ApplaySerializer, HireSerializer, \
     NotificationFreeSerializer
 from profile_app.models import Portflio, Certification, WorkHistory
 # Create your views here.
