@@ -489,7 +489,7 @@ def FreePaymentCards(request):
             cards,many=True
         ).data)
     else:
-        return Response({'message': 'not found'})
+        return Response('not found')
 @api_view(['POST'])
 def clientPaymentCards(request):
     client_id = request.data['client_id']
