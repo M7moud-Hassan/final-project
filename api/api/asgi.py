@@ -15,7 +15,6 @@ application = ProtocolTypeRouter({
     "websocket": AuthMiddlewareStack(
         URLRouter([path('ws/notifications/', NotificationConsumer.as_asgi()),
                    path('ws/notificationsfree/', NotificationConsumerFree.as_asgi()),
-                   path('ws/chatClient/', ChatClientConsumer.as_asgi()),
                     re_path(r'^ws_client/(?P<room_name>[^/]+)/$', ChatClientConsumer.as_asgi()),
                    re_path(r'^ws_free/(?P<room_name>[^/]+)/$', ChatFreeConsumer.as_asgi())
                    ]))

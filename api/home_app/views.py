@@ -411,7 +411,7 @@ def addReview(requests):
     user = RegisterFreelancer.objects.filter(id=requests.data['id']).first()
     client =RegisterUser.objects.filter(id=requests.data['client']).first()
     if user and client:
-        ReviewAndRate.objects.create(free=user,review=requests.data['review'],rate=requests.data['rate'])
+        ReviewAndRate.objects.create(client=client,free=user,review=requests.data['review'],rate=requests.data['rate'])
         h= Hires.objects.filter(id=requests.data['job_id']).first()
         h.is_payment=True
         h.save()

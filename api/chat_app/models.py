@@ -7,6 +7,8 @@ from authentication.models import RegisterUser, RegisterFreelancer
 
 class ChatMessage(models.Model):
     id = models.AutoField
+    client=models.BooleanField(default=False)
+    free=models.BooleanField(default=False)
     message = models.CharField(max_length=5000)
     create_at = models.DateTimeField(default=datetime.now())
     is_read = models.BooleanField(default=False)
