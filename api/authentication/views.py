@@ -36,7 +36,8 @@ def signup_freeLancer(request):
 
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
-        #send_mail(mail_subject, messages, from_email, to_email)
+       # send_mail(mail_subject, messages, from_email, to_email)
+
         return Response(user.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
