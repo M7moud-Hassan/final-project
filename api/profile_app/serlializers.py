@@ -63,7 +63,12 @@ class PaymentMethodSerial(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod
         fields = '__all__'
+class RegisterSerial(serializers.ModelSerializer):
+    class Meta:
+        model = RegisterUser
+        fields = ['id','fname','lname','image']
 class ReviewAndRateSerial(serializers.ModelSerializer):
+    client=RegisterSerial(read_only=True)
     class Meta:
         model = ReviewAndRate
         fields = '__all__'

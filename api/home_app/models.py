@@ -88,6 +88,8 @@ class Hires(models.Model):
 
 class ReviewAndRate(models.Model):
     id=models.AutoField
+    client= models.ForeignKey(RegisterUser,
+                             on_delete=models.CASCADE)
     free = models.ForeignKey(RegisterFreelancer,
                              on_delete=models.CASCADE)
     rate=models.IntegerField(max_length=5)

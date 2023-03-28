@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from chat_app.models import ChatMessage, ChatMessageClient, ChatMessageFree
-
+from .models import RegisterFreelancer, RegisterUser
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class ChatMessageClientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChatMessageClient
-        fields = '__all__'
+        fields = ['messages']
 
 
 class ChatMessageFreeSerializer(serializers.ModelSerializer):
@@ -23,6 +23,14 @@ class ChatMessageFreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChatMessageFree
-        fields = '__all__'
+        fields = ['messages']
+class FreeLancerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegisterFreelancer
+        fields = ['id','first_name','last_name','user_image','is_online']
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegisterUser
+        fields = ['id','fname','lname','image','is_online']
