@@ -481,9 +481,9 @@ def changePassword(request):
 @api_view(['POST'])
 def FreePaymentCards(request):
     free_id = request.data['free_id']
-    print(free_id)
+
     cards = PaymentFreeMethod.objects.filter(free_id=free_id)
-    print(cards)
+
     if cards:
         return Response(PaymentFreeMethodSerial(
             cards,many=True
