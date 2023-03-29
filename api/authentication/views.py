@@ -204,7 +204,7 @@ def login(request):
             else:
                 return Response({"ress": 'not active',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
         else:
-            return Response({"ress": 'password worng'})
+            return Response({"ress": 'Email or Password you Entered is wrong'})
     else:
         user_free=RegisterUser.objects.filter(email=email).first()
         if user_free:
@@ -215,9 +215,9 @@ def login(request):
                 else:
                     return Response({"ress": 'not active'})
             else:
-                return Response({"ress": 'password worog'})
+                return Response({"ress": 'Email or Password you Entered is wrong'})
         else:
-            return Response({"ress":"not found"})
+            return Response({"ress":"Not Found"})
 
 
 @api_view(['POST'])
