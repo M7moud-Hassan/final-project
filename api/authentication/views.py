@@ -215,7 +215,7 @@ def login(request):
                 else:
                     return Response({"ress": 'not active'})
             else:
-                return Response({"ress": 'password worog'})
+                return Response({"ress": 'password worng'})
         else:
             return Response({"ress":"not found"})
 
