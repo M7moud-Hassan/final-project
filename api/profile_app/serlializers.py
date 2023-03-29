@@ -24,7 +24,7 @@ class portfiloSerialzer(serializers.ModelSerializer):
     images = ImagesProjectSerializer(many=True,read_only=True)
     class Meta:
         model = Portflio
-        fields = ['title','portflio_freelancer','linkVide','description','images']
+        fields = ['title','portflio_freelancer','linkVide','description','images','date_time']
 
 
 class History_workSerialzer(serializers.ModelSerializer):
