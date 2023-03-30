@@ -36,7 +36,7 @@ def signup_freeLancer(request):
 
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
-       # send_mail(mail_subject, messages, from_email, to_email)
+        send_mail(mail_subject, messages, from_email, to_email)
 
         return Response(user.data)
     else:
@@ -61,7 +61,7 @@ def registerUserSerialzer(request):
         print(register.email)
         to_email = [register.email]
         from_email = settings.EMAIL_HOST_USER
-        #send_mail(mail_subject, messages, from_email, to_email)
+        send_mail(mail_subject, messages, from_email, to_email)
         return Response(user.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -111,13 +111,12 @@ def emailResetPassword(request):
     uid = urlsafe_base64_encode(force_bytes(user.id))
     reset_url = f'http://127.0.0.1:3000/test_token/{uid}/{token}/{type}'
     print(reset_url)
-    #send_mail(
-    #    'Password Reset',
-    #    f'Click the following link to reset your password: {reset_url}',
-     #   'soonfu0@gmail.com',
-     #   [email],
-     #   fail_silently=False,
-   # )
+    send_mail(
+      'Password Reset',
+ f'Click the following link to reset your password: {reset_url}',
+       'soonfu0@gmail.com',
+      [email],
+    )
 
     return Response('ok', status=200)
 
