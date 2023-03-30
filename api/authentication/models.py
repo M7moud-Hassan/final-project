@@ -9,6 +9,8 @@ class Services (models.Model):
     id = models.AutoField
     name = models.CharField(max_length=50)
     category_service = models.ForeignKey(CategoryService, on_delete=models.CASCADE)
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Experience (models.Model):
@@ -36,6 +38,8 @@ class Skills(models.Model):
     name=models.CharField(max_length=50)
     id=models.AutoField
 
+    def __str__(self):
+        return f'{self.name}'
 
 class RegisterFreelancer(models.Model):
     id = models.AutoField
