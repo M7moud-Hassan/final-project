@@ -56,19 +56,29 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def websocket_receive(self, event):
         sen = json.loads(event['text'])
+        print(event)
+        if sen["data"]["payload"] == "off":
+            self.room_group_name = 'test_consumer_group'
+            channel_layer = get_channel_layer()
+            await (channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    "type": "send_notification",
+                    "value": json.dumps(sen["data"])
+                })
+        else:
+            free = await get_free(int(sen['data']['sender']))
+            rec = await get_client(int(sen['data']['recieve']))
 
-        free = await get_free(int(sen['data']['sender']))
-        rec = await get_client(int(sen['data']['recieve']))
-
-        get_of = await create_notification(free, rec, f'{free} {sen["data"]["payload"]}')
-        self.room_group_name = 'test_consumer_group'
-        channel_layer = get_channel_layer()
-        await (channel_layer.group_send)(
-            self.room_group_name,
-            {
-                "type": "send_notification",
-                "value": json.dumps(get_of)
-            })
+            get_of = await create_notification(free, rec, f'{free} {sen["data"]["payload"]}')
+            self.room_group_name = 'test_consumer_group'
+            channel_layer = get_channel_layer()
+            await (channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    "type": "send_notification",
+                    "value": json.dumps(get_of)
+                })
 
 
     async def websocket_disconnect(self, event):
@@ -98,20 +108,30 @@ class NotificationConsumerFree(AsyncWebsocketConsumer):
         })
 
     async def websocket_receive(self, event):
+
         sen = json.loads(event['text'])
+        if sen["data"]["payload"]=="off":
+            self.room_group_name = 'test_consumer_group_free'
+            channel_layer = get_channel_layer()
+            await (channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    "type": "send_notification",
+                    "value": json.dumps(sen["data"])
+                })
+        else:
+            free = await get_free(int(sen['data']['recieve']))
+            rec = await get_client(int(sen['data']['sender']))
 
-        free = await get_free(int(sen['data']['recieve']))
-        rec = await get_client(int(sen['data']['sender']))
-
-        get_of = await create_notificationFree(rec, free, f'{rec} {sen["data"]["payload"]}')
-        self.room_group_name = 'test_consumer_group_free'
-        channel_layer = get_channel_layer()
-        await (channel_layer.group_send)(
-            self.room_group_name,
-            {
-                "type": "send_notification",
-                "value": json.dumps(get_of)
-            })
+            get_of = await create_notificationFree(rec, free, f'{rec} {sen["data"]["payload"]}')
+            self.room_group_name = 'test_consumer_group_free'
+            channel_layer = get_channel_layer()
+            await (channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    "type": "send_notification",
+                    "value": json.dumps(get_of)
+                })
 
     async def websocket_disconnect(self, event):
         print('disconnect', event)
