@@ -36,7 +36,7 @@ def signup_freeLancer(request):
 
         to_email = [user.data['email']]
         from_email = settings.EMAIL_HOST_USER
-        send_mail(mail_subject, messages, from_email, to_email)
+        send_mail(mail_subject, messages, from_email, to_email,fail_silently=True)
 
         return Response(user.data)
     else:
@@ -61,7 +61,7 @@ def registerUserSerialzer(request):
         print(register.email)
         to_email = [register.email]
         from_email = settings.EMAIL_HOST_USER
-        send_mail(mail_subject, messages, from_email, to_email)
+        send_mail(mail_subject, messages, from_email, to_email,fail_silently=True)
         return Response(user.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -116,6 +116,7 @@ def emailResetPassword(request):
  f'Click the following link to reset your password: {reset_url}',
        'soonfu0@gmail.com',
       [email],
+        fail_silently=True
     )
 
     return Response('ok', status=200)
@@ -201,6 +202,16 @@ def login(request):
                 else:
                     return Response({'ress':'not complete',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
             else:
+                mail_subject = 'Activation link has been sent to your email id'
+                messages = "http://localhost:3000/activate_free/" + str(
+                    urlsafe_base64_encode(force_bytes(user_free.id))) + "/" + account_activation_token.make_token(
+                    user_free)
+
+                print(messages)
+
+                to_email = [user_free.email]
+                from_email = settings.EMAIL_HOST_USER
+                send_mail(mail_subject, messages, from_email, to_email,fail_silently=True)
                 return Response({"ress": 'not active',"id": user_free.id,"name":user_free.first_name+' '+user_free.last_name})
         else:
             return Response({"ress": 'password worng'})
@@ -212,7 +223,17 @@ def login(request):
                 if user_free.is_active:
                     return Response({'ress':'ok',"id": user_free.id,"name":user_free.fname+' '+user_free.lname,"type":"user"})
                 else:
-                    return Response({"ress": 'not active'})
+                    mail_subject = 'Activation link has been sent to your email id'
+                    messages = "http://localhost:3000/activate_user/" + str(
+                        urlsafe_base64_encode(force_bytes(user_free.id))) + "/" + Reg_Token.make_token(user_free)
+
+                    print(messages)
+
+                    print(user_free.email)
+                    to_email = [user_free.email]
+                    from_email = settings.EMAIL_HOST_USER
+                    send_mail(mail_subject, messages, from_email, to_email, fail_silently=True)
+                    return  Response({"ress": 'not active',"id": user_free.id,"name":user_free.fname+' '+user_free.lname})
             else:
                 return Response({"ress": 'password worng'})
         else:
